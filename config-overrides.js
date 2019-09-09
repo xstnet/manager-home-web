@@ -1,0 +1,14 @@
+/**
+ * Created by PhpStorm.
+ * Author: Xu shantong <shantongxu@qq.com>
+ * Date: 2019/9/7
+ * Time: 下午11:26
+ */
+const { override, fixBabelImports } = require('customize-cra');
+
+module.exports = override(
+    fixBabelImports('import', {
+        libraryName: 'antd-mobile',
+        style: 'css',
+    }),
+);

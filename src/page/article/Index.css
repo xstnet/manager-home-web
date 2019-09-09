@@ -1,0 +1,11 @@
+.article-list-item p {
+    margin: 0;
+    padding: 3px 0;
+    color: #333;
+}
+
+.article-list-item span {
+    margin: 0;
+    padding: 3px 0;
+    color: #999;
+}
