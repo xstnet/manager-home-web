@@ -11,23 +11,9 @@
 
 export const setPageTitle = 'SET_PAGE_TITLE';
 export const setTabBarIsShow = 'SET_TAB_BAR_IS_SHOW';
+export const setMenuList = 'SET_MENU_LIST';
+export const listenNavBarMenuSelect = 'LISTEN_NAV_BAR_MENU_SELECT';
 
-export const getMenus = 'GET_MENU';
-export const toggleTodo = 'TOGGLE_TODO';
-export const deleteTodo = 'DELETE_TODO';
-export const addTodo = 'ADD_TODO';
-export const setTodos = 'SET_TODOS';
+export const setUserInfo = 'SET_USER_INFO';
 
-export const setMenu = 'SET_MENU';
-export const setUserInfo = 'SET_USERINFO';
-
-// 权限管理
-export const setPermission = 'SET_PERMISSION';
-export const setUsers = 'SET_USERS';
-export const addUsers = 'ADD_USERS';
-export const deleteUsers = 'DELETE_USERS';
-export const updateUsers = 'UPDATE_USERS';
-export const setRoles = 'SET_ROLES';
-export const updateRoles = 'UPDATE_ROLES';
-export const addRoles = 'ADD_ROLES';
-export const deleteRoles = 'DELETE_ROLES';
+export const setCategoryList = 'SET_CATEGORY_LIST';

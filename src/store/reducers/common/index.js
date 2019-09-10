@@ -4,23 +4,27 @@
  * Date: 2019/9/8
  * Time: 下午11:19
  */
-// import { addTodo } from '@/api/Api.js'
 import * as Actions from '../Actions';
-import menuList from '../../../config/menuList';
+import {menuType, menuItems} from '../../../config/menuList';
 
 const initState = {
-    pageTitle: '我的家1',
+    pageTitle: '我的家',
     menuIcon: 'ellipsis',
     tabBarShow: true,
-    menuList: menuList,
+    menuList: [],
+    menuConfig: {
+        type: menuType,
+        menuItems: menuItems
+    },
+    onNavBarMenuSelect: item => {
+        console.log(item);
+    },
     userInfo: {
     },
 };
 
 const Common = (state = initState, action) => {
     switch (action.type) {
-        case Actions.getMenus:
-            return state.menuList;
         case Actions.setPageTitle:
             return {
                 ...state,
@@ -31,6 +35,21 @@ const Common = (state = initState, action) => {
             return {
                 ...state,
                 tabBarShow: action.isShow,
+            };
+        case Actions.setMenuList:
+            return {
+                ...state,
+                menuList: action.currentMenuList.map(type => {return state.menuConfig.menuItems[type]}),
+            };
+        case Actions.listenNavBarMenuSelect:
+            return {
+                ...state,
+                onNavBarMenuSelect: action.callback,
+            };
+        case Actions.setUserInfo:
+            return {
+                ...state,
+                userInfo: action.userInfo,
             };
         default:
             return state;

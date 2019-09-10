@@ -6,10 +6,12 @@
  */
 
 import { combineReducers } from 'redux';
-import Home from './home/index'
-import Common from './common/index'
+import Home from './home/index';
+import Common from './common/index';
+import Category from './category/index';
 
 export default combineReducers({
     Home,
     Common,
+    Category,
 })

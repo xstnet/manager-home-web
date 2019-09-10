@@ -7,11 +7,6 @@
 
 import * as Actions from '../Actions'
 
-export const addTodo = (id, name) => ({
-    type: Actions.addTodo,
-    id,
-    name
-});
 
 export const setPageTitle = title => ({
     type: Actions.setPageTitle,
@@ -21,5 +16,15 @@ export const setPageTitle = title => ({
 export const setTabBarIsShow = isShow => ({
     type: Actions.setTabBarIsShow,
     isShow
+});
+
+export const setMenuList = currentMenuList => ({
+    type: Actions.setMenuList,
+    currentMenuList
+});
+
+export const listenNavBarMenuSelect = callback => ({
+    type: Actions.listenNavBarMenuSelect,
+    callback
 });
 

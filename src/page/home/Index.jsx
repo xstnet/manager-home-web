@@ -4,6 +4,7 @@
 import React from 'react';
 import {Grid} from "antd-mobile";
 import { Control } from 'react-keeper';
+import { connect } from 'react-redux';
 import MySvg from '../layout/MySvg';
 
 const homeGridList = [
@@ -41,8 +42,13 @@ const homeGridList = [
 
 class Index extends React.Component {
     componentDidMount() {
-        this.props.setPageTitle('我的家');
-    }
+        this.props.setPageTitle(`${this.props.common.userInfo.username}的小窝`);
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addRoom,
+            this.props.common.menuConfig.type.managerRoom,
+        ]);
+        this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
+    };
 
     onClick = (item, index) => {
         // 跳转到家具列表页面
@@ -51,11 +57,20 @@ class Index extends React.Component {
             return true;
         }
         console.log('添加家具');
-    }
+    };
+
+    listonNavBarMenuSelect = node => {
+        if (node.props.value === this.props.common.menuConfig.type.addRoom) {
+            alert('添加房间');
+        }
+        if (node.props.value === this.props.common.menuConfig.type.managerRoom) {
+            alert('管理房间');
+        }
+    };
 
     render() {
-        return <div style={{minHeight: '80vh'}}>
-            <p className="my-home-title">徐善通的家</p>
+        return <div>
+            <p className="my-home-title">{this.props.common.userInfo.username}的小窝</p>
             <Grid data={homeGridList}
                   columnNum={3}
                   onClick={this.onClick}
@@ -72,4 +87,15 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+const mapStateToProps = (state, ownProps) => ({
+    // common: state.Common,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    // toggleTodo: id => dispatch(toggleTodo(id)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Index)

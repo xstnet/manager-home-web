@@ -22,6 +22,10 @@ class FurnitureDetail extends React.Component {
 
     componentDidMount() {
         this.props.setPageTitle('家具信息');
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addFurn,
+            this.props.common.menuConfig.type.managerFurn,
+        ]);
     }
 
     onClickFurniture = () => {

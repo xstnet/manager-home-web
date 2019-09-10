@@ -3,7 +3,9 @@
  */
 import React from 'react';
 import {List , Icon} from 'antd-mobile';
-import {Control} from 'react-keeper'
+import {Control} from 'react-keeper';
+import {connect} from 'react-redux';
+import {getCategoryList} from '../../api/api';
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -45,6 +47,11 @@ const categoryList = [
 class Index extends React.Component {
     componentDidMount() {
         this.props.setPageTitle('类目列表');
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addCategory,
+            this.props.common.menuConfig.type.editCategory,
+        ]);
+        this.props.getCategoryList(0);
     }
 
     onClick = id => {
@@ -55,9 +62,10 @@ class Index extends React.Component {
         return <div>
             <List renderHeader={() => '物品类目'} className="my-list">
                 {
-                    categoryList.map(item => {
+                    this.props.category.categoryList.map((item, index) => {
                         return (
                             <Item arrow="horizontal" multipleLine
+                                  key={index}
                                   onClick={this.onClick.bind(this, item.id)}
                             >
                                 {item.name}
@@ -71,4 +79,15 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+const mapStateToProps = (state, ownProps) => ({
+    category: state.Category,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    getCategoryList: (id) => dispatch(getCategoryList(id)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Index);

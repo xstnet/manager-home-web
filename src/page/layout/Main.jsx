@@ -3,15 +3,14 @@ import './Main.css';
 
 import {Popover, NavBar, Icon, TabBar} from 'antd-mobile';
 import {Control} from 'react-keeper';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import {getUserInfo} from '../../api/api';
+import {setTabBarIsShow} from '../../store/reducers/common/action';
 
 import Routers from "../../router";
 import MySvg from "./MySvg";
 
 const Item = Popover.Item;
-
-const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs"
-                          alt=""/>;
 
 const TabBarList = [
     {
@@ -71,6 +70,9 @@ class Main extends React.Component {
     onBack = () => {
         console.log('onBack', Control.path);
         if (Control.path !== '/') {
+            if (Control.path === '/search') {
+                this.props.setTabBarIsShow(true);
+            }
             Control.go(-1);
         }
     };
@@ -80,6 +82,7 @@ class Main extends React.Component {
     };
 
     componentDidMount = () => {
+        this.props.getUserInfo();
         console.log(this.props);
         let currentPath = Control.path;
         console.log(currentPath);
@@ -125,7 +128,7 @@ class Main extends React.Component {
                              overlay={[
                                  this.props.common.menuList.map((item, index) => {
                                      return (
-                                         <Item key={index} value={index} icon={<MySvg icon={item.icon}/>}>{item.name}</Item>
+                                         <Item key={index} value={item.key} icon={<MySvg icon={item.icon}/>}>{item.name}</Item>
                                      );
                                  }),
                              ]}
@@ -134,7 +137,7 @@ class Main extends React.Component {
                                  offset: [-10, 0],
                              }}
                              onVisibleChange={this.handleVisibleChange}
-                             onSelect={this.onSelect}
+                             onSelect={this.props.common.onNavBarMenuSelect}
                     >
                         <div style={{
                             height: '100%',
@@ -174,7 +177,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    // toggleTodo: id => dispatch(toggleTodo(id)),
+    setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
+    getUserInfo: () => dispatch(getUserInfo()),
 });
 
 export default connect(

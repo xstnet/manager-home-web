@@ -23,6 +23,10 @@ class Detail extends React.Component {
 
     componentDidMount() {
         this.props.setPageTitle('标签列表');
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addTag,
+            this.props.common.menuConfig.type.managerTag,
+        ]);
     }
 
     onClick = id => {
@@ -30,7 +34,7 @@ class Detail extends React.Component {
     };
 
     render() {
-        return <div style={{minHeight: '60vh'}}>
+        return <div>
             <List renderHeader={() => '标签列表'} className="my-list">
                 <Item arrow="horizontal" onClick={this.onClickArticle}
                       extra={this.state.listTip}

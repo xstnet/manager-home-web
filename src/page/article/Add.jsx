@@ -9,7 +9,7 @@ class Add extends React.Component {
         this.props.setPageTitle('添加物品');
     }
     render() {
-        return <div style={{minHeight: '80vh'}}>
+        return <div>
             <p className="my-home-title">添加物品</p>
 
         </div>

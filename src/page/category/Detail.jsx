@@ -33,7 +33,7 @@ class Detail extends React.Component {
     };
 
     render() {
-        return <div style={{minHeight: '60vh'}}>
+        return <div>
             <List renderHeader={() => '上衣'} className="my-list">
                 <Item arrow="horizontal" onClick={this.onClickArticle}>
                     查看物品

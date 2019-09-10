@@ -12,7 +12,9 @@ class Index extends React.Component {
     componentDidMount() {
         this.props.setTabBarIsShow(false);
         this.props.setPageTitle('搜索物品');
-
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addArticle,
+        ]);
         this.autoFocusInst.focus();
     }
 

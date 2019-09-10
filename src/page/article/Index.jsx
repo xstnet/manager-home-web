@@ -81,6 +81,10 @@ class Index extends React.Component {
 
     componentDidMount() {
         this.props.setPageTitle('物品列表');
+        this.props.setMenuList([
+            this.props.common.menuConfig.type.addArticle,
+            this.props.common.menuConfig.type.editArticle,
+        ]);
         // you can scroll to the specified position
         // setTimeout(() => this.lv.scrollTo(0, 120), 800);
 

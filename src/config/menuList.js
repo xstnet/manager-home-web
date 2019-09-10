@@ -5,17 +5,7 @@
  * Time: 下午9:41
  */
 
-const MANAGER_FURN = 'MANAGER_FURN';
-const ADD_ARTICLE = 'ADD_ARTICLE';
-const EDIT_ARTICLE = 'EDIT_ARTICLE';
-const ADD_ROOM = 'ADD_ROOM';
-const MANAGER_ROOM = 'MANAGER_ROOM';
-const ADD_CATEGORY = 'ADD_CATEGORY';
-const EDIT_CATEGORY = 'EDIT_CATEGORY';
-const ADD_TAG = 'ADD_TAG';
-const MANAGER_TAG = 'MANAGER_TAG';
-
-const menuType = {
+export const menuType = {
     addFurn: 'ADD_FURN',
     managerFurn: 'MANAGER_FURN',
     addArticle: 'ADD_ARTICLE',
@@ -26,94 +16,69 @@ const menuType = {
     editCategory: 'EDIT_CATEGORY',
     addTag: 'ADD_TAG',
     managerTag: 'MANAGER_TAG',
+    logout: 'LOGOUT',
+    setting: 'SETTING',
 };
 
-export const menuList1 = {
-    add_furn: {
-        key: 'add-furn',
+export const menuItems = {
+    [menuType.addFurn]: {
+        key: menuType.addFurn,
         name: '添加家具',
         icon: 'icon-plus',
     },
-    MANAGER_FURN: {
+    [menuType.managerFurn]: {
+        key: menuType.managerFurn,
         name: '管理家具',
         icon: 'icon-plus',
     },
-    ADD_ARTICLE: {
+    [menuType.addArticle]: {
+        key: menuType.addArticle,
         name: '添加物品',
         icon: 'icon-plus',
     },
-    EDIT_ARTICLE: {
+    [menuType.editArticle]: {
+        key: menuType.editArticle,
         name: '编辑物品',
         icon: 'icon-plus',
     },
-    ADD_ROOM: {
+    [menuType.addRoom]: {
+        key: menuType.addRoom,
         name: '添加房间',
         icon: 'icon-plus',
     },
-    MANAGER_ROOM: {
+    [menuType.managerRoom]: {
+        key: menuType.managerRoom,
         name: '管理房间',
         icon: 'icon-plus',
     },
-    ADD_CATEGORY: {
+    [menuType.addCategory]: {
+        key: menuType.addCategory,
         name: '添加类目',
         icon: 'icon-plus',
     },
-    EDIT_CATEGORY: {
+    [menuType.editCategory]: {
+        key: menuType.editCategory,
         name: '编辑类目',
         icon: 'icon-plus',
     },
-    ADD_TAG: {
+    [menuType.addTag]: {
+        key: menuType.addTag,
         name: '添加标签',
         icon: 'icon-plus',
     },
-    MANAGER_TAG: {
+    [menuType.managerTag]: {
+        key: menuType.managerTag,
         name: '管理标签',
         icon: 'icon-plus',
+    },
+    [menuType.logout]: {
+        key: menuType.logout,
+        name: '退出登录',
+        icon: '',
+    },
+    [menuType.setting]: {
+        key: menuType.setting,
+        name: '设置',
+        icon: '',
     },
 };
-
-export const menuList = [
-    {
-        key: 'add-furn',
-        name: '添加家具',
-        icon: 'icon-plus',
-    },
-    {
-        name: '管理家具',
-        icon: 'icon-plus',
-    },
-    {
-        name: '添加物品',
-        icon: 'icon-plus',
-    },
-    {
-        name: '编辑物品',
-        icon: 'icon-plus',
-    },
-    {
-        name: '添加房间',
-        icon: 'icon-plus',
-    },
-    {
-        name: '管理房间',
-        icon: 'icon-plus',
-    },
-    {
-        name: '添加类目',
-        icon: 'icon-plus',
-    },
-    {
-        name: '编辑类目',
-        icon: 'icon-plus',
-    },
-    {
-        name: '添加标签',
-        icon: 'icon-plus',
-    },
-    {
-        name: '管理标签',
-        icon: 'icon-plus',
-    },
-];
-
-export default menuList;
