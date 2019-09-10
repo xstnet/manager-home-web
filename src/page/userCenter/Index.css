@@ -1,0 +1,42 @@
+.user-cover {
+    width: 100%;
+    height: 200px;
+    background-image: url("http://img4.imgtn.bdimg.com/it/u=2871850818,3285437138&fm=26&gp=0.jpg");
+    /*background-size: cover;*/
+}
+
+.user-cover-left {
+    float: left;
+    width: 40%;
+    text-align: center;
+}
+.user-cover-avatar img {
+    margin-top: 40px;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 1px solid #999999;
+}
+
+.user-cover-right {
+    padding-top: 40px;
+    float: left;
+    width: 60%;
+}
+
+.user-cover-name {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #fff;
+}
+.user-cover-mobile {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.logout-button {
+    bottom: 80px;
+    position: fixed !important;
+    width: 100%;
+}
