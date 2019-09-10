@@ -8,16 +8,20 @@ import * as Actions from '../Actions';
 import {menuType, menuItems} from '../../../config/menuList';
 
 const initState = {
-    pageTitle: '我的家',
+    pageTitle: '',
     menuIcon: 'ellipsis',
     tabBarShow: true,
     menuList: [],
+    menuVisible: false,
     menuConfig: {
         type: menuType,
         menuItems: menuItems
     },
     onNavBarMenuSelect: item => {
         console.log(item);
+    },
+    beforeNavBarMenuSelect: item => {
+        return true;
     },
     userInfo: {
     },
@@ -44,7 +48,19 @@ const Common = (state = initState, action) => {
         case Actions.listenNavBarMenuSelect:
             return {
                 ...state,
-                onNavBarMenuSelect: action.callback,
+                onNavBarMenuSelect: function (item) {
+                    console.log('aaa');
+                    if (state.beforeNavBarMenuSelect(item)) {
+                        action.callback(item);
+                    }
+                    return true;
+                },
+                menuVisible: false,
+            };
+        case Actions.beforeNavBarMenuSelect:
+            return {
+                ...state,
+                beforeNavBarMenuSelect: action.callback,
             };
         case Actions.setUserInfo:
             return {

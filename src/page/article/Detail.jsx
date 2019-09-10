@@ -44,7 +44,7 @@ class Detail extends React.Component {
             this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.editArticle,
         ]);
-    }
+    };
     render() {
         return <div>
             <p className="my-home-title">物品信息</p>

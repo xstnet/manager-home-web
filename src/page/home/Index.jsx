@@ -44,6 +44,7 @@ class Index extends React.Component {
     componentDidMount() {
         this.props.setPageTitle(`${this.props.common.userInfo.username}的小窝`);
         this.props.setMenuList([
+            this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.addRoom,
             this.props.common.menuConfig.type.managerRoom,
         ]);
@@ -61,10 +62,11 @@ class Index extends React.Component {
 
     listonNavBarMenuSelect = node => {
         if (node.props.value === this.props.common.menuConfig.type.addRoom) {
-            alert('添加房间');
+            console.log('添加房间');
+            console.log(this.props.common);
         }
         if (node.props.value === this.props.common.menuConfig.type.managerRoom) {
-            alert('管理房间');
+            console.log('管理房间');
         }
     };
 
@@ -98,4 +100,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Index)
+)(Index);

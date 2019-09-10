@@ -5,7 +5,7 @@ import {Popover, NavBar, Icon, TabBar} from 'antd-mobile';
 import {Control} from 'react-keeper';
 import { connect } from 'react-redux';
 import {getUserInfo} from '../../api/api';
-import {setTabBarIsShow} from '../../store/reducers/common/action';
+import {setTabBarIsShow, beforeNavBarMenuSelect} from '../../store/reducers/common/action';
 
 import Routers from "../../router";
 import MySvg from "./MySvg";
@@ -45,14 +45,7 @@ class Main extends React.Component {
         selected: '',
         selectedTab: 'home',
     };
-    onSelect = (opt, index) => {
-        console.log(opt);
-        console.log(index, 'index');
-        this.setState({
-            visible: false,
-            selected: opt.props.value,
-        });
-    };
+
     handleVisibleChange = (visible) => {
         this.setState({
             visible,
@@ -81,8 +74,14 @@ class Main extends React.Component {
         Control.go('/search');
     };
 
+    onSelect = (node) => {
+        this.setState({visible: false});
+        this.props.common.onNavBarMenuSelect(node);
+    };
+
     componentDidMount = () => {
         this.props.getUserInfo();
+        this.props.beforeNavBarMenuSelect(this.beforeNavBarMenuSelect);
         console.log(this.props);
         let currentPath = Control.path;
         console.log(currentPath);
@@ -93,6 +92,24 @@ class Main extends React.Component {
         this.setState({
             selectedTab: currentPath.split('/', 1)[0],
         })
+    };
+
+    /**
+     * 右上角菜单选择事件 before
+     */
+    beforeNavBarMenuSelect = node => {
+        let menuType = this.props.common.menuConfig.type;
+
+        switch (node.props.value) {
+            case menuType.addArticle:
+                Control.go('/article/add');
+                return false;
+            case menuType.addFurn:
+                Control.go('/furniture/add');
+                return false;
+        }
+
+        return  true;
     };
 
     renderTabBar = () => {
@@ -124,6 +141,7 @@ class Main extends React.Component {
                              key="navbar-menu"
                              overlayClassName="fortest"
                              overlayStyle={{color: 'currentColor'}}
+                             // visible={this.props.common.menuVisible}
                              visible={this.state.visible}
                              overlay={[
                                  this.props.common.menuList.map((item, index) => {
@@ -136,8 +154,8 @@ class Main extends React.Component {
                                  overflow: {adjustY: 0, adjustX: 0},
                                  offset: [-10, 0],
                              }}
-                             onVisibleChange={this.handleVisibleChange}
-                             onSelect={this.props.common.onNavBarMenuSelect}
+                             onSelect={this.onSelect}
+                             // onSelect={this.props.common.onNavBarMenuSelect}
                     >
                         <div style={{
                             height: '100%',
@@ -178,10 +196,11 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
+    beforeNavBarMenuSelect: callback => dispatch(beforeNavBarMenuSelect(callback)),
     getUserInfo: () => dispatch(getUserInfo()),
 });
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Main)
+)(Main);

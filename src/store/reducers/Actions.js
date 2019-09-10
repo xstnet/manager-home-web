@@ -13,6 +13,7 @@ export const setPageTitle = 'SET_PAGE_TITLE';
 export const setTabBarIsShow = 'SET_TAB_BAR_IS_SHOW';
 export const setMenuList = 'SET_MENU_LIST';
 export const listenNavBarMenuSelect = 'LISTEN_NAV_BAR_MENU_SELECT';
+export const beforeNavBarMenuSelect = 'BEFORE_NAV_BAR_MENU_SELECT';
 
 export const setUserInfo = 'SET_USER_INFO';
 

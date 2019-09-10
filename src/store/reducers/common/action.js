@@ -28,3 +28,8 @@ export const listenNavBarMenuSelect = callback => ({
     callback
 });
 
+export const beforeNavBarMenuSelect = callback => ({
+    type: Actions.beforeNavBarMenuSelect,
+    callback
+});
+

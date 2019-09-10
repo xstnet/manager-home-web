@@ -13,6 +13,7 @@ class Routers extends React.Component {
                 <Route path="/furniture/detail/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureDetail }></Route>
 
                 <Route path="/article>" {...this.props.commonAction} common={this.props.common}  component={ Page.Article }></Route>
+                <Route path="/article/add>" {...this.props.commonAction} common={this.props.common}  component={ Page.ArticleAdd }></Route>
 
                 <Route path="/search>" {...this.props.commonAction} common={this.props.common}  component={ Page.Search }></Route>
 

@@ -15,6 +15,9 @@ export const FurnitureDetail = LoadComponents(() => import('../page/home/Furnitu
 export const Search = LoadComponents(() => import('../page/search/Index.jsx'));
 
 export const Article = LoadComponents(() => import('../page/article/Index.jsx'));
+export const ArticleAdd = LoadComponents(() => import('../page/article/Add.jsx'));
+
+
 export const Category = LoadComponents(() => import('../page/category/Index.jsx'));
 export const CategoryDetail = LoadComponents(() => import('../page/category/Detail.jsx'));
 export const TagList = LoadComponents(() => import('../page/category/TagList.jsx'));
