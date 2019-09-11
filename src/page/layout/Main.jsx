@@ -20,16 +20,16 @@ const TabBarList = [
         path: '/',
     },
     {
-        name: '物品',
-        icon: 'icon-wupinguanli',
-        key: 'article',
-        path: '/article',
-    },
-    {
         name: '类目',
         icon: 'icon-leimu',
         key: 'category',
         path: '/category',
+    },
+    {
+        name: '物品',
+        icon: 'icon-wupinguanli',
+        key: 'article',
+        path: '/article',
     },
     {
         name: '个人中心',

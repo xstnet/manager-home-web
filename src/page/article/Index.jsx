@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
 
 /* eslint no-dupe-keys: 0, no-mixed-operators: 0 */
 import { ListView } from 'antd-mobile';
 import './Index.css';
+import {getArticleList} from "../../api/api";
 
 function MyBody(props) {
     return (
@@ -14,25 +16,8 @@ function MyBody(props) {
     );
 }
 
-const data = [
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/dKbkpPXKfvZzWCM.png',
-        title: 'Meet hotel',
-        des: '黑色毛衣',
-    },
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/XmwCzSeJiqpkuMB.png',
-        title: 'McDonald\'s invites you',
-        des: '不是所有的兼职汪都需要风吹日晒',
-    },
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/hfVtzEhPzTUewPm.png',
-        title: 'Eat the week',
-        des: '不是所有的兼职汪都需要风吹日晒',
-    },
-];
 const NUM_SECTIONS = 1;
-const NUM_ROWS_PER_SECTION = 1;
+const NUM_ROWS_PER_SECTION = 10;
 let pageIndex = 0;
 
 const dataBlobs = {};
@@ -62,20 +47,20 @@ function genData(pIndex = 0) {
 class Index extends React.Component {
     constructor(props) {
         super(props);
-        const getSectionData = (dataBlob, sectionID) => dataBlob[sectionID];
-        const getRowData = (dataBlob, sectionID, rowID) => dataBlob[rowID];
-
         const dataSource = new ListView.DataSource({
-            getRowData,
-            getSectionHeaderData: getSectionData,
             rowHasChanged: (row1, row2) => row1 !== row2,
-            sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
         });
 
         this.state = {
-            dataSource,
             isLoading: true,
             height: document.documentElement.clientHeight * 3 / 4,
+            articleList: {
+                list: [],
+                page: 1,
+                count: 0,
+                more: 0,
+            },
+            dataSource: dataSource.cloneWithRows([]),
         };
     }
 
@@ -85,17 +70,24 @@ class Index extends React.Component {
             this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.editArticle,
         ]);
+
+        getArticleList(0).then(result => {
+            console.log('result', result);
+            this.setState({articleList: result.data});
+        });
+
+
         // you can scroll to the specified position
         // setTimeout(() => this.lv.scrollTo(0, 120), 800);
 
-        const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
+        const height = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
         // simulate initial Ajax
         setTimeout(() => {
             genData();
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs, sectionIDs, rowIDs),
+                dataSource: this.state.dataSource.cloneWithRows(this.state.articleList.list),
                 isLoading: false,
-                height: hei,
+                height: height,
             });
         }, 600);
     }
@@ -109,83 +101,99 @@ class Index extends React.Component {
     //   }
     // }
 
+    // 当所有的数据都已经渲染过，并且列表被滚动到距离最底部不足 onEndReachedThreshold 个像素的距离时调用
     onEndReached = (event) => {
-        return false;
+        // return false;
+        let articleList = this.state.articleList;
         // load new data
         // hasMore: from backend data, indicates whether it is the last page, here is false
-        if (this.state.isLoading && !this.state.hasMore) {
+        if (this.state.isLoading && !articleList.more) {
             return;
         }
-        console.log('reach end', event);
+        // console.log('reach end', event);
         this.setState({ isLoading: true });
-        setTimeout(() => {
-            genData(++pageIndex);
+        getArticleList(0, articleList.page + 1).then(result => {
+            console.log('page result', result);
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs, sectionIDs, rowIDs),
+                dataSource: this.state.dataSource.cloneWithRows(result.data.list),
+                articleList: result.data,
                 isLoading: false,
             });
-        }, 1000);
-    }
+        });
+    };
 
-    render() {
-        const separator = (sectionID, rowID) => (
-            <div
-                key={`${sectionID}-${rowID}`}
-                style={{
-                    backgroundColor: '#F5F5F9',
-                    height: 8,
-                    borderTop: '1px solid #ECECED',
-                    borderBottom: '1px solid #ECECED',
-                }}
-            />
-        );
-        let index = data.length - 1;
-        const row = (rowData, sectionID, rowID) => {
-            if (index < 0) {
-                index = data.length - 1;
-            }
-            const obj = data[index--];
-            return (
-                <div key={rowID} style={{ padding: '0 15px' }}>
+    renderRow = (rowData, sectionID, rowID) => {
+        // console.log('rowData', rowData);
+        return (
+            <div key={rowID} style={{ padding: '0 15px' }}>
 
-                    <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
-                        <img style={{ height: '64px', marginRight: '15px' }} src={obj.img} alt="" />
-                        <div style={{ lineHeight: 1 }}>
-                            <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{obj.des}</div>
-                            <div className="article-list-item">
-                                <p>位置: <span>第一个柜子里第一个</span></p>
-                                <p>备注: <span>第一个柜子里</span></p>
-                            </div>
+                <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
+                    <img className="article-logo" src={rowData.logo} alt="" />
+                    <div style={{ lineHeight: 1 }}>
+                        <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{rowData.name}</div>
+                        <div className="article-list-item">
+                            <p>位置: <span>{rowData.location}</span></p>
+                            <p>备注: <span>{rowData.comment}</span></p>
                         </div>
                     </div>
                 </div>
-            );
-        };
+            </div>
+        );
+    };
+
+    render() {
+        // 分隔符
+        const separator = (sectionID, rowID) => (
+            <div
+                className="list-separator"
+                key={`${sectionID}-${rowID}`}
+            />
+        );
 
         return (
             <ListView
                 ref={el => this.lv = el}
-                initialListSize={5}
+                initialListSize={10}
                 dataSource={this.state.dataSource}
                 renderHeader={() => <span>物品列表</span>}
                 renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
-                    {this.state.isLoading ? 'Loading...' : 'Loaded'}
+                    {this.state.isLoading ? '正在加载...' : '加载完成'}
                 </div>)}
+                // 自定义 body 的包裹组件
                 renderBodyComponent={() => <MyBody />}
-                renderRow={row}
+                renderRow={this.renderRow}
+                /*
+                 * 如果提供了此属性，一个可渲染的组件会被渲染在每一行下面，除了小节标题的前面的最后一行。
+                 * 在其上方的小节ID和行ID，以及邻近的行是否被高亮会作为参数传递进来。
+                 */
                 renderSeparator={separator}
                 style={{
                     height: this.state.height,
                     overflow: 'auto',
                 }}
-                pageSize={4}
+                // 每次事件循环（每帧）渲染的行数
+                pageSize={10}
                 onScroll={() => { console.log('scroll'); }}
+                // 当一个行接近屏幕范围多少像素之内的时候，就开始渲染这一行
                 scrollRenderAheadDistance={500}
+                // 调用下一页的方法
                 onEndReached={this.onEndReached}
+                // 调用下一页的临界值, 单位px
                 onEndReachedThreshold={10}
             />
         );
     }
 }
 
-export default Index;
+const mapStateToProps = (state, ownProps) => ({
+    // article: state.Article,
+});
+
+// const mapDispatchToProps = (dispatch, ownProps) => ({
+//
+// });
+
+export default connect(
+    mapStateToProps,
+    // mapDispatchToProps
+)(Index);

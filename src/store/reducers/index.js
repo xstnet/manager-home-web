@@ -9,9 +9,11 @@ import { combineReducers } from 'redux';
 import Home from './home/index';
 import Common from './common/index';
 import Category from './category/index';
+import Article from './article/index';
 
 export default combineReducers({
     Home,
     Common,
     Category,
+    Article,
 })

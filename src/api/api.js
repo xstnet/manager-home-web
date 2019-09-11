@@ -17,7 +17,7 @@ export function getUserInfo() {
 				userInfo: res.data.userInfo,
 			});
 		});
-	}
+	};
 };
 
 export function getCategoryList(id) {
@@ -28,5 +28,17 @@ export function getCategoryList(id) {
 				categoryList: res.data.categoryList,
 			});
 		});
-	}
+	};
+};
+
+export const getArticleList = (id, page = 1) => {
+
+	return Http.get('/get-article-list', {id, page});
+	// try {
+	// 	return Http.get('/get-article-list', {id, page});
+	// 	console.log(result);
+	// 	return result;
+	// } catch (err) {
+	// 	console.log(err);
+	// }
 };
