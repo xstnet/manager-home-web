@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
+import { Link } from 'react-keeper'
 
 /* eslint no-dupe-keys: 0, no-mixed-operators: 0 */
-import { ListView } from 'antd-mobile';
+import { ListView, Button } from 'antd-mobile';
 import './Index.css';
 import {getArticleList} from "../../api/api";
 
@@ -53,8 +54,9 @@ class Index extends React.Component {
 
         this.state = {
             isLoading: true,
+            loadMessage: '正在加载中...',
             height: document.documentElement.clientHeight * 3 / 4,
-            articleList: {
+            article: {
                 list: [],
                 page: 1,
                 count: 0,
@@ -70,26 +72,18 @@ class Index extends React.Component {
             this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.editArticle,
         ]);
+        const height = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop - 50;
 
         getArticleList(0).then(result => {
             console.log('result', result);
-            this.setState({articleList: result.data});
-        });
-
-
-        // you can scroll to the specified position
-        // setTimeout(() => this.lv.scrollTo(0, 120), 800);
-
-        const height = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
-        // simulate initial Ajax
-        setTimeout(() => {
-            genData();
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.state.articleList.list),
+                article: result.data,
+                dataSource: this.state.dataSource.cloneWithRows(result.data.list),
                 isLoading: false,
                 height: height,
             });
-        }, 600);
+        });
+
     }
 
     // If you use redux, the data maybe at props, you need use `componentWillReceiveProps`
@@ -104,41 +98,56 @@ class Index extends React.Component {
     // 当所有的数据都已经渲染过，并且列表被滚动到距离最底部不足 onEndReachedThreshold 个像素的距离时调用
     onEndReached = (event) => {
         // return false;
-        let articleList = this.state.articleList;
+        let article = this.state.article;
         // load new data
         // hasMore: from backend data, indicates whether it is the last page, here is false
-        if (this.state.isLoading && !articleList.more) {
+        if (this.state.isLoading || !article.more) {
+            this.setState({loadMessage: '没有更多了'});
             return;
         }
         // console.log('reach end', event);
         this.setState({ isLoading: true });
-        getArticleList(0, articleList.page + 1).then(result => {
+        getArticleList(0, article.page + 1).then(result => {
             console.log('page result', result);
+            let allList = [...this.state.article.list, ...result.data.list];
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(result.data.list),
-                articleList: result.data,
+                dataSource: this.state.dataSource.cloneWithRows(allList),
+                article: {
+                    ...result.data,
+                    list: allList,
+                },
                 isLoading: false,
             });
         });
     };
 
-    renderRow = (rowData, sectionID, rowID) => {
-        // console.log('rowData', rowData);
+    renderRow = (rowData, sectionID, rowID, highlightRow) => {
         return (
+            <Link to={`/article/detail/${rowData.id}`}>
             <div key={rowID} style={{ padding: '0 15px' }}>
 
-                <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
-                    <img className="article-logo" src={rowData.logo} alt="" />
-                    <div style={{ lineHeight: 1 }}>
-                        <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{rowData.name}</div>
-                        <div className="article-list-item">
+                <div className="list-item-wrap">
+                    <img className="list-item-logo" src={rowData.logo} alt="" />
+                    <div className="lit-item-content-wrap">
+                        <div className="list-item-name" style={{  }}>{rowData.name}</div>
+                        <div className="list-item-content">
                             <p>位置: <span>{rowData.location}</span></p>
                             <p>备注: <span>{rowData.comment}</span></p>
                         </div>
                     </div>
                 </div>
             </div>
+            </Link>
         );
+    };
+
+    renderHeader = () => {
+        return <div style={{overflow: 'hidden'}}>
+            <span>物品列表</span>
+            <div style={{float: 'right'}}>
+                <Button size="small" type="primary">筛选</Button>
+            </div>
+        </div>
     };
 
     render() {
@@ -155,9 +164,10 @@ class Index extends React.Component {
                 ref={el => this.lv = el}
                 initialListSize={10}
                 dataSource={this.state.dataSource}
-                renderHeader={() => <span>物品列表</span>}
+                renderHeader={this.renderHeader}
                 renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
-                    {this.state.isLoading ? '正在加载...' : '加载完成'}
+                    {this.state.loadMessage}
+                    {/*{this.state.isLoading ? '正在加载...' : '加载完成'}*/}
                 </div>)}
                 // 自定义 body 的包裹组件
                 renderBodyComponent={() => <MyBody />}
@@ -173,9 +183,9 @@ class Index extends React.Component {
                 }}
                 // 每次事件循环（每帧）渲染的行数
                 pageSize={10}
-                onScroll={() => { console.log('scroll'); }}
+                // onScroll={() => { console.log('scroll'); }}
                 // 当一个行接近屏幕范围多少像素之内的时候，就开始渲染这一行
-                scrollRenderAheadDistance={500}
+                scrollRenderAheadDistance={50}
                 // 调用下一页的方法
                 onEndReached={this.onEndReached}
                 // 调用下一页的临界值, 单位px

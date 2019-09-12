@@ -1,13 +1,19 @@
-.article-list-item p {
+.list-item-content p {
     margin: 0;
     padding: 3px 0;
     color: #333;
 }
 
-.article-list-item span {
+.list-item-content span {
     margin: 0;
     padding: 3px 0;
     color: #999;
+}
+
+.list-item-name {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
 }
 
 .list-separator {
@@ -16,9 +22,19 @@
     border-top: 1px solid #ECECED;
     border-bottom: 1px solid #ECECED;
 }
+.list-item-wrap {
+    display: -webkit-box;
+    display: flex;
+    padding: 15px 0;
+}
 
-.article-logo {
+.list-item-logo {
     height: 64px !important;
     width: 64px !important;
+    border: 1px solid #dddddd;
     margin-right: 15px;
+}
+
+.lit-item-content-wrap {
+    line-height: 1;
 }

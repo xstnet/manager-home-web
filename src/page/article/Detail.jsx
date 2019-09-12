@@ -2,66 +2,106 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {Grid} from "antd-mobile";
+import {List, Tag} from "antd-mobile";
+import {getArticleDetail} from '../../api/api';
+import './Detail.css';
+import MySvg from "../layout/MySvg";
 
-const homeGridList = [
-    {
-        id: '1',
-        icon: 'icon-woshi',
-        title: '卧室',
-    },
-    {
-        id: '1',
-        icon: 'icon-keting',
-        title: '客厅',
-    },
-    {
-        id: '1',
-        icon: 'icon-chufang',
-        title: '厨房',
-    },
-    {
-        id: '1',
-        icon: 'icon-yangtai',
-        title: '阳台',
-    },
-    {
-        id: '1',
-        icon: 'icon-weishengjian',
-        title: '卫生间',
-    },
-    {
-        id: '1',
-        icon: 'icon-plus',
-        title: '添加房间',
-    },
-];
+const Item = List.Item;
+const Brief = Item.Brief;
+
 
 class Detail extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            articleId: this.props.params.articleId,
+            articleDetail: {
+
+            },
+        };
+    }
     componentDidMount() {
         this.props.setPageTitle('物品信息');
         this.props.setMenuList([
             this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.editArticle,
         ]);
+
+        getArticleDetail().then(result => {
+            console.log(result);
+            this.setState({articleDetail: result.data});
+        });
     };
-    render() {
+
+    renderTitleAction = () => {
         return <div>
-            <p className="my-home-title">物品信息</p>
-            <Grid data={homeGridList}
-                  columnNum={3}
-                  renderItem={dataItem => (
-                      <div style={{ padding: '12.5px' }}>
-                          <svg className="icon" style={{fontSize: '65px'}} aria-hidden="true">
-                              <use xlinkHref={'#' + dataItem.icon}></use>
-                          </svg>
-                          <div style={{ color: '#888', fontSize: '14px', marginTop: '12px' }}>
-                              <span>{dataItem.title}</span>
-                          </div>
-                      </div>
-                  )}
-            />
+            <MySvg className="detail-header-action" icon="icon-edit"/>
+            <MySvg className="detail-header-action" icon="icon-delete1"/>
         </div>
+    };
+
+    render() {
+        return (<div>
+            <List className="detail-header">
+                <Item thumb={<img className="detail-logo" src="http://dummyimage.com/100x100/79f2e8" alt=""/>}
+                      extra={this.renderTitleAction()}
+                      multipleLine
+                >
+                    {this.state.articleDetail.name}
+                    <Brief>
+                        <div><b>数量: </b> {this.state.articleDetail.quantity}</div>
+                        <div><b>分类: </b> {this.state.articleDetail.categoryName}</div>
+                    </Brief>
+                </Item>
+            </List>
+            <List renderHeader={() => ''} className="detail-info">
+                <Item  wrap>
+                    所在位置
+                    <Brief>
+                        {this.state.articleDetail.location}
+                    </Brief>
+                </Item>
+                <Item className="detail-info-tag"  wrap>
+                    标签
+                    <Brief>
+                        {this.state.articleDetail.tagList ? (this.state.articleDetail.tagList.map(item => {
+                            return <Tag key={item.id} selected>{item.name}</Tag>
+                        })) : ''}
+                    </Brief>
+                </Item>
+            </List>
+            <List className="detail-info" renderHeader={() => ''}>
+                <Item>
+                    <div>购买时间<div style={{float: "right"}}>{this.state.articleDetail.buyTime}</div></div>
+                </Item>
+                <Item>
+                    <div>购买价格<div style={{float: "right"}}>{this.state.articleDetail.price} 元</div></div>
+                </Item>
+                <Item>
+                    <div>属于<div style={{float: "right"}}>{this.state.articleDetail.ownUser}</div></div>
+                </Item>
+                <Item
+                    multipleLine
+                >
+                    备注
+                    <Brief className="article-comment-wrap" wrap>{this.state.articleDetail.comment}</Brief>
+                </Item>
+            </List>
+            <List className="detail-image-list" renderHeader={() => '全部图片'}>
+                <Item wrap>
+                    <Brief>
+                        {this.state.articleDetail.imageList ? (
+                            this.state.articleDetail.imageList.map(item => {
+                                return <img src={item} alt=""/>
+                            })
+                        ) : ''}
+
+                    </Brief>
+                </Item>
+            </List>
+        </div>);
     }
 }
 

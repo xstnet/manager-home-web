@@ -2,73 +2,25 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {List , Icon} from 'antd-mobile';
+import {List , Icon, Button} from 'antd-mobile';
 import {Control} from 'react-keeper'
+import {getFurnitureList} from '../../api/api';
 import './Furniture.css';
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
-const FurnitureList = [
-    {
-        id: 1,
-        name: '黑色衣柜',
-        sublist: [
-            {
-                id: 11,
-                name: '左二排',
-                sublist: [
-                    {id: 111, name: '上层',},
-                    {id: 112, name: '下层',},
-                ]
-            },
-            {
-                id: 12,
-                name: '右一排',
-                sublist: [
-                    {id: 111, name: '上层',},
-                    {id: 112, name: '下层',},
-                ]
-            },
-        ],
-    },
-    {
-        id: 2,
-        name: '白色衣柜',
-        sublist: [
-            {id: 21, name: '第一层',},
-            {id: 22, name: '第二层',},
-            {id: 23, name: '第三层',},
-            {id: 24, name: '第四层',},
-            {id: 25, name: '第五层',},
-        ],
-    },
-    {
-        id: 3,
-        name: '白色零食架',
-        sublist: [
-            {id: 31, name: '第一层',},
-            {id: 32, name: '第二层',},
-            {id: 33, name: '第三层',},
-            {id: 34, name: '第四层',},
-            {id: 35, name: '第五层',},
-        ],
-    },
-    {
-        id: 3,
-        name: '电视柜',
-    },
-    {
-        id: 4,
-        name: '电脑桌',
-    },
-    {
-        id: 5,
-        name: '暧脚箱',
-    }
-];
-
 class Furniture extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            roomId: parseInt(this.props.params.roomId),
+            furnitureId: parseInt(this.props.params.furnitureId),
+            furnitureList: [],
+        };
+    }
+
     componentDidMount() {
         this.props.setPageTitle('家具列表');
         this.props.setMenuList([
@@ -76,33 +28,48 @@ class Furniture extends React.Component {
             this.props.common.menuConfig.type.addFurn,
             this.props.common.menuConfig.type.managerFurn,
         ]);
+        getFurnitureList(this.state.roomId, this.state.furnitureId).then(result => {
+            this.setState({furnitureList: result.data.list});
+        });
     }
 
-    onClick = id => {
-        Control.go('/furniture/detail/'+id);
+    onListItemClick = id => {
+        Control.go('/article');
     };
+
+    onShowContainerClick = (id, e) => {
+        Control.replace(`/furniture/${this.state.roomId}/${id}`);
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+    };
+
+    componentDidUpdate() {
+        let newFurnitureId = parseInt(this.props.params.furnitureId);
+        if (this.state.furnitureId !== newFurnitureId) {
+            getFurnitureList(this.state.roomId, this.state.furnitureId).then(result => {
+                this.setState({furnitureList: result.data.list, furnitureId: newFurnitureId});
+            });
+        }
+        console.log(this.state.furnitureId, this.props.params.furnitureId)
+    }
 
     render() {
         return <div>
-            <List renderHeader={() => '客厅里的家具'} className="my-list">
-                <Item arrow="horizontal" multipleLine
-                      onClick={this.onClick.bind(this, 1)}
-                >
-                    黑色衣柜
-                    <Brief>包含3个容器, 200件物品 </Brief>
-                </Item>
-                <Item arrow="horizontal" multipleLine
-                      onClick={this.onClick.bind(this, 3)}
-                >
-                    白色衣柜
-                    <Brief>包含3个容器, 200件物品 </Brief>
-                </Item>
-                <Item arrow="horizontal" multipleLine
-                      onClick={this.onClick.bind(this, 2)}
-                >
-                    黑色衣柜
-                    <Brief>包含3个容器, 200件物品 </Brief>
-                </Item>
+            <List className="furniture-list-action" renderHeader={() => '客厅里的家具'}>
+                {
+                    this.state.furnitureList.map(item => {
+                        return (
+                            <Item key={`list-item-${item.id}`} arrow="horizontal" multipleLine
+                                  style={{flexBasis: 'auto !important'}}
+                                  onClick={this.onListItemClick.bind(this, item.id)}
+                                  extra={<Button key={`button-${item.id}`} onClick={this.onShowContainerClick.bind(this, item.id)} size="small" type="primary">查看容器</Button>}
+                            >
+                                {item.name}
+                                <Brief>包含{item.subCount}个容器, {item.articleCount}件物品 </Brief>
+                            </Item>
+                        )
+                    })
+                }
             </List>
         </div>
     }

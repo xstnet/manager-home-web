@@ -1,0 +1,47 @@
+.detail-header {
+
+}
+
+.detail-header .am-list-body {
+    padding: 10px 0;
+}
+
+.detail-info .am-list-item .am-list-line .am-list-brief {
+    white-space: normal;
+}
+
+.detail-image-list .am-list-brief {
+    white-space: normal !important;
+}
+.detail-image-list .am-list-brief img {
+    margin: 0 5px 5px 0;
+    width: 84px;
+    height: 84px;
+    border: 1px solid #dddddd;
+}
+.detail-header .detail-logo {
+    width: 84px;
+    height: 84px;
+    border: 1px solid #dddddd;
+}
+.detail-header .detail-header-action {
+    font-size: 26px;
+    color: #e94f4f;
+}
+.detail-header .detail-header-action:first-child {
+    margin-right: 5px;
+    color: #0a8ee9;
+}
+.detail-info .detail-info-tag .am-tag  {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.detail-info .detail-info-tag .am-tag.am-tag-normal {
+    background-color: #fff;
+    color: #108ee9;
+    border: 1px solid #108ee9;
+    border-radius: 3px;
+    position: relative;
+    /*border: none;*/
+}

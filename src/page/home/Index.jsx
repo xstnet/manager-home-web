@@ -42,19 +42,20 @@ const homeGridList = [
 
 class Index extends React.Component {
     componentDidMount() {
-        this.props.setPageTitle(`${this.props.common.userInfo.username}的小窝`);
+        console.log(this.props.common.userInfo);
         this.props.setMenuList([
             this.props.common.menuConfig.type.addArticle,
             this.props.common.menuConfig.type.addRoom,
             this.props.common.menuConfig.type.managerRoom,
         ]);
         this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
+        this.props.setPageTitle("我的家");
     };
 
     onClick = (item, index) => {
         // 跳转到家具列表页面
         if (item.id !== 'add') {
-            Control.go('/furniture/' + item.id);
+            Control.go(`/furniture/${item.id}/0`);
             return true;
         }
         console.log('添加家具');

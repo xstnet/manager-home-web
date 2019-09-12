@@ -23,6 +23,11 @@ export const setMenuList = currentMenuList => ({
     currentMenuList
 });
 
+export const setUserInfo = userInfo => ({
+    type: Actions.setUserInfo,
+    userInfo
+});
+
 export const listenNavBarMenuSelect = callback => ({
     type: Actions.listenNavBarMenuSelect,
     callback

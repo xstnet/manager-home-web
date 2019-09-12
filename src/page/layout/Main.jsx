@@ -5,7 +5,7 @@ import {Popover, NavBar, Icon, TabBar} from 'antd-mobile';
 import {Control} from 'react-keeper';
 import { connect } from 'react-redux';
 import {getUserInfo} from '../../api/api';
-import {setTabBarIsShow, beforeNavBarMenuSelect} from '../../store/reducers/common/action';
+import {setTabBarIsShow, beforeNavBarMenuSelect, setUserInfo} from '../../store/reducers/common/action';
 
 import Routers from "../../router";
 import MySvg from "./MySvg";
@@ -15,13 +15,13 @@ const Item = Popover.Item;
 const TabBarList = [
     {
         name: '我的家',
-        icon: 'icon-home-copy',
+        icon: 'icon-home',
         key: 'home',
         path: '/',
     },
     {
         name: '类目',
-        icon: 'icon-leimu',
+        icon: 'icon-category',
         key: 'category',
         path: '/category',
     },
@@ -33,7 +33,7 @@ const TabBarList = [
     },
     {
         name: '个人中心',
-        icon: 'icon-icon',
+        icon: 'icon-user',
         key: 'user-center',
         path: '/user-center',
     },
@@ -44,12 +44,6 @@ class Main extends React.Component {
         visible: false,
         selected: '',
         selectedTab: 'home',
-    };
-
-    handleVisibleChange = (visible) => {
-        this.setState({
-            visible,
-        });
     };
 
     onTabBarSelect = (selectedTab, path) => {
@@ -80,9 +74,20 @@ class Main extends React.Component {
     };
 
     componentDidMount = () => {
+
+        // getUserInfo().then(result => {
+        //     console.log('get userInfo', result);
+        //     this.props.setUserInfo(result.data.userInfo);
+        // });
         this.props.getUserInfo();
+        console.log('view userInfo', this.props.common.userInfo);
+
+
+
+
+
         this.props.beforeNavBarMenuSelect(this.beforeNavBarMenuSelect);
-        console.log(this.props);
+
         let currentPath = Control.path;
         console.log(currentPath);
         if (currentPath === '/') {
@@ -173,7 +178,9 @@ class Main extends React.Component {
                 {this.props.common.pageTitle}
             </NavBar>
             {/*内容*/}
-            <Routers/>
+            <div className="page-main" style={{overflow: "hidden", paddingBottom: `${this.props.common.tabBarShow ? 50 : 0}px`}}>
+                <Routers/>
+            </div>
             {/*底部导航*/}
             <div style={{ position: 'fixed', height: '50px', width: '100%', bottom: 0 }}>
                 <TabBar
@@ -197,6 +204,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
     beforeNavBarMenuSelect: callback => dispatch(beforeNavBarMenuSelect(callback)),
+    setUserInfo: userInfo => dispatch(setUserInfo(userInfo)),
     getUserInfo: () => dispatch(getUserInfo()),
 });
 

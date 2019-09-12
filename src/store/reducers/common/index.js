@@ -24,6 +24,7 @@ const initState = {
         return true;
     },
     userInfo: {
+        username: '',
     },
 };
 

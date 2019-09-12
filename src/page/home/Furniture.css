@@ -1,3 +1,11 @@
 .am-accordion .am-accordion-item .am-accordion-header {
     /*padding-left: 0 !important;*/
 }
+
+.furniture-list-action .am-list-extra {
+    flex-basis: auto !important;
+}
+
+.furniture-list-action .am-list-extra  a{
+    padding: 0 10px;
+}

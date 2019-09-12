@@ -8,19 +8,25 @@ class Routers extends React.Component {
     render() {
         return (
             <div>
+                {/*首页,  我的家*/}
                 <Route path="/>" {...this.props.commonAction} common={this.props.common} component={ Page.Home }></Route>
-                <Route path="/furniture/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.Furniture }></Route>
-                <Route path="/furniture/detail/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureDetail }></Route>
+                <Route path="/furniture-detail/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureDetail }></Route>
+                <Route path="/furniture/:roomId/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.Furniture }></Route>
 
+                {/*物品管理*/}
                 <Route path="/article>" {...this.props.commonAction} common={this.props.common}  component={ Page.Article }></Route>
                 <Route path="/article/add>" {...this.props.commonAction} common={this.props.common}  component={ Page.ArticleAdd }></Route>
+                <Route path="/article/detail/:articleId>" {...this.props.commonAction} common={this.props.common}  component={ Page.ArticleDetail }></Route>
 
+                {/*搜索页面*/}
                 <Route path="/search>" {...this.props.commonAction} common={this.props.common}  component={ Page.Search }></Route>
 
+                {/*类目*/}
                 <Route path="/category>" {...this.props.commonAction} common={this.props.common}  component={ Page.Category }></Route>
                 <Route path="/category/detail/:categoryId>" {...this.props.commonAction} common={this.props.common}  component={ Page.CategoryDetail }></Route>
                 <Route path="/category/taglist/:categoryId>" {...this.props.commonAction} common={this.props.common}  component={ Page.TagList }></Route>
 
+                {/*个人中心*/}
                 <Route path="/user-center>" {...this.props.commonAction} common={this.props.common}  component={ Page.UserCenter }></Route>
 
                 <Route miss {...this.props.commonAction} common={this.props.common} component={ Page.Home }></Route>
