@@ -2,7 +2,6 @@ import React from 'react';
 import { SearchBar } from 'antd-mobile';
 import {Control} from 'react-keeper';
 import {connect} from 'react-redux';
-import {setTabBarIsShow} from '../../store/reducers/common/action';
 
 class Index extends React.Component {
     state = {
@@ -54,10 +53,10 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
+
 });
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Index)
+)(Index);

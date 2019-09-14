@@ -5,6 +5,6 @@
  * Time: 下午11:19
  */
 
-import * as Actions from '../Actions'
+import * as Actions from '../Actions';
 
 

@@ -24,7 +24,12 @@ const initState = {
         return true;
     },
     userInfo: {
+        id: 0,
+        mobile: '',
         username: '',
+        homeList: [],
+        familyMember: [],
+        colorList: [],
     },
 };
 

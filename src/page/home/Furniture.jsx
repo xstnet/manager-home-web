@@ -38,7 +38,8 @@ class Furniture extends React.Component {
     };
 
     onShowContainerClick = (id, e) => {
-        Control.replace(`/furniture/${this.state.roomId}/${id}`);
+        Control.go(`/furniture/${this.state.roomId}/${id}`);
+        // window.location.href = `/furniture/${this.state.roomId}/${id}`;
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
     };

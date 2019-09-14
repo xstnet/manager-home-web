@@ -18,8 +18,42 @@ Mock.mock('/get-user-info', {
 	message: 'ok',
 	data: {
 		userInfo: {
-			username: '@cname',
+			id: 1,
+			username: '娜娜',
 			mobile: '13260718253',
+			homeList: [
+				{
+					id: 1,
+					name: '娜娜的小窝',
+					masterId: 1,
+					default: 1,
+				},
+				{
+					id: 2,
+					name: '@cname 的小家',
+					masterId: 2,
+					default: 0,
+				},
+			],
+			familyMember: [
+				{
+					id: 1,
+					username: '娜娜',
+				},
+				{
+					id: 3,
+					username: '@cname',
+				},
+			],
+			colorList: [
+				'',
+				'#1cdd49',
+				'#dd1625',
+				'#dd8327',
+				'#ddcfc3',
+				'#000',
+				'#1f10dd',
+			],
 		}
 	},
 });
@@ -28,36 +62,20 @@ Mock.mock('/get-category-list', {
 	code: 0,
 	message: 'ok',
 	data: {
-		categoryList: [
+		'categoryList|6': [
 			{
-				id: 0,
-				name: '未分类1',
+				'id|+1': 10,
+				'name|1': ['未分类', '上衣', '下衣', '鞋子', '饰品', '电子产品', '药品', '食物', '家纺'],
 				'count|1-200': 20,
-			},
-			{
-				id: 1,
-				name: '上衣',
-				'count|1-200': 20,
-			},
-			{
-				id: 2,
-				name: '下衣',
-				'count|1-200': 20,
-			},
-			{
-				id: 3,
-				name: '饰品',
-				'count|1-200': 20,
-			},
-			{
-				id: 4,
-				name: '药品',
-				'count|1-200': 20,
-			},
-			{
-				id: 5,
-				name: '杂项',
-				'count|1-200': 20,
+				'tagList|1-10': [
+					{
+						'id|+1': 500,
+						'name|1': [
+							'裤子', '饰品', '手镯', '鞋子', '帽子', '外套', '毛衣', '秋衣', '秋裤', '手表', '电脑', '手机', '感冒药', '药品'
+						],
+						'count|1-200': 1,
+					}
+				],
 			},
 		],
 	},
@@ -122,7 +140,7 @@ Mock.mock(RegExp('/get-article-detail' + ".*"), "get", (options) => {
 				'碎花裙子4',
 				'白色羽绒服5',
 			],
-			'tagList|1-7': [
+			'tagList|5-10': [
 				{
 					'id|+1': 1,
 					'name|1': [

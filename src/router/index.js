@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, } from 'react-keeper';
 import { connect, } from 'react-redux';
 import * as Page from './page';
-import {setPageTitle, setMenuList, listenNavBarMenuSelect} from '../store/reducers/common/action';
+import {setPageTitle, setMenuList, listenNavBarMenuSelect, setTabBarIsShow} from '../store/reducers/common/action';
 
 class Routers extends React.Component {
     render() {
@@ -44,6 +44,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         setPageTitle: title => dispatch(setPageTitle(title)),
         setMenuList: currentMenuList => dispatch(setMenuList(currentMenuList)),
         listenNavBarMenuSelect: callback => dispatch(listenNavBarMenuSelect(callback)),
+        setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
     },
 });
 

@@ -55,7 +55,7 @@ export function getFurnitureList(roomId, parentId = 0) {
 }
 
 // 获取类目列表
-export function getCategoryList(parentId) {
+export function getCategoryList() {
 	return dispatch => {
 		Http.get('/get-category-list').then(res => {
 			dispatch({

@@ -1,0 +1,44 @@
+.am-image-picker-list .am-flexbox {
+    padding-bottom: 6px;
+    margin-bottom: 0;
+}
+
+.add-article-wrap .add-article-name input {
+    text-align: right;
+}
+
+.tag-picker-wrap .am-list-body {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.tag-picker-action div {
+    color: #108ee9;
+    font-size: 17px;
+    padding: 9px 15px;
+    height: 42px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tag-picker-action div:active{
+   background-color: #ddd;
+}
+
+.add-own-user-wrap .am-list-brief {
+    text-align: right;
+}
+
+.add-own-user-wrap .am-list-brief .am-tag {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.add-color-pick-item {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    /*margin-right: 10px;*/
+}
