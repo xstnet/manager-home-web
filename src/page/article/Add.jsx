@@ -19,7 +19,7 @@ import {
 } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { connect } from 'react-redux';
-import {getCategoryList} from '../../api/api';
+import {getCategoryList, createTag} from '../../api/api';
 import './Add.css';
 
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -304,6 +304,22 @@ class Add extends React.Component {
         Toast.success('添加成功!', 2);
     };
 
+    // 点击创建标签事件
+    onCreateTag = () => {
+        if (this.state.category.length === 0) {
+            Toast.info('请先选择一个物品分类!', 2);
+            return false;
+        }
+
+        let categoryName = this.props.category.categoryList.find(item => (item.id === this.state.category[0])).name;
+        Modal.prompt('添加标签', `当前分类: ${categoryName}`, [
+            { text: '取消' },
+            { text: '添加', onPress: value => {
+                this.props.createTag(this.state.category[0], value);
+                } },
+        ], 'default');
+    };
+
     render() {
         const { getFieldProps, getFieldDecorator } = this.props.form;
         const { files } = this.state.file;
@@ -460,7 +476,7 @@ class Add extends React.Component {
                         ))}
                     </List>
                     <div className="tag-picker-action">
-                        {/*<div onClick={this.onCloseTagPicker} style={{float: 'left'}}>取消</div>*/}
+                        <div onClick={this.onCreateTag} style={{float: 'left'}}>创建标签</div>
                         <div onClick={this.onCloseTagPicker} style={{float: 'right'}}>完成</div>
                     </div>
                 </Modal>
@@ -477,6 +493,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     getCategoryList: () => dispatch(getCategoryList()),
+    createTag: (categoryId, tagName) => dispatch(createTag(categoryId, tagName)),
 });
 
 export default connect(

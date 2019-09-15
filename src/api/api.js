@@ -83,3 +83,17 @@ export const getArticleList = (id, page = 1) => {
 	// 	console.log(err);
 	// }
 };
+
+// 创建新标签
+export function createTag(categoryId, tagName) {
+	return dispatch => {
+		Http.post('/create-tag', {categoryId, tagName}).then(res => {
+			dispatch({
+				type: Actions.addTag,
+				id: res.data.id,
+				tagName: res.data.tagName,
+				categoryId: parseInt(res.data.categoryId),
+			});
+		});
+	};
+}

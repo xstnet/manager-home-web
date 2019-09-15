@@ -56,7 +56,7 @@ class Http {
 			}, ).then(res => {
 				if (res.data.code === config.CODE_NO_PERMISSION) {
 					Toast.info(res.data.message, 1.5);
-					return Promise.reject('No Permission')
+					return Promise.reject('No Permission');
 				} else if (res.data.code === config.CODE_NEED_LOGIN) {
 					// Cache.remove('token');
 					// Cache.remove('userInfo');
@@ -67,12 +67,16 @@ class Http {
 				}
 				resolve(res.data)
 			}).catch(err => {
-				reject(err)
+				reject(err);
 			})
 		})
 	}
 
-	static post(url, params = {}, tips={showMsg:true}) {
+	static post(url, params = {}, tips = {showMsg:true, loading: true}) {
+		if (tips.loading) {
+			Toast.loading('提交中...', 0);
+		}
+		console.log(params);
 		return new Promise((resolve, reject) => {
 			axios.post(url, qs.stringify(params), {
 					headers: {
@@ -80,6 +84,9 @@ class Http {
 					}
 				}
 			).then(res => {
+				if (tips.loading) {
+					Toast.hide();
+				}
 				if (res.data.code === config.CODE_NEED_LOGIN) {
 					// Cache.remove('token');
 					// Cache.remove('userInfo');
@@ -97,14 +104,14 @@ class Http {
 						if (tips.showMsg) {
 							Toast.info(res.data.message);
 						}
-						return Promise.reject('Action Error')
+						return Promise.reject('Action Error');
 				}
-				resolve(res.data)
+				resolve(res.data);
 			}).catch(err => {
 				if (tips.loading) {
 					Toast.hide();
 				}
-				reject(err)
+				reject(err);
 			})
 		})
 	}

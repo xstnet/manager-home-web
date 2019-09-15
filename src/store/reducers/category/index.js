@@ -18,6 +18,20 @@ const Category = (state = initState, action) => {
                 ...state,
                 categoryList: action.categoryList,
             };
+        case Actions.addTag:
+            let categoryList = state.categoryList;
+            console.log(categoryList, action);
+            let newTag = {
+                id: action.id,
+                name: action.tagName,
+            };
+            let categoryIndex = categoryList.findIndex((item) => (item.id === action.categoryId));
+            categoryList[categoryIndex].tagList.push(newTag);
+            console.log(categoryList);
+            return {
+                ...state,
+                categoryList: [...categoryList],
+            };
         default:
             return state;
     }

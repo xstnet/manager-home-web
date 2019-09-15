@@ -20,6 +20,7 @@ export const setUserInfo = 'SET_USER_INFO';
  * 类目
  */
 export const setCategoryList = 'SET_CATEGORY_LIST';
+export const addTag = 'ADD_TAG';
 
 /**
  * 物品

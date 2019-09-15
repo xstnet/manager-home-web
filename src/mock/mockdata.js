@@ -9,6 +9,16 @@
 import Mock from 'mockjs';
 const Random = Mock.Random;
 
+const getPostParams = (body) => {
+	let params = {};
+	let t = body.split('&');
+	for(let i = 0; i < t.length; i ++) {
+		params[t[i].split("=")[0]]=(t[i].split("=")[1]);
+	}
+
+	return params;
+};
+
 Mock.setup({
 	timeout: '200-600' // 表示响应时间介于 200 和 600 毫秒之间，默认值是'10-100'。
 });
@@ -215,4 +225,23 @@ Mock.mock(RegExp('/get-furniture-list' + ".*"), "get", (options) => {
 
 	};
 	return Mock.mock(list);
+});
+
+// 添加标签
+Mock.mock('/create-tag', );
+
+Mock.mock(RegExp('/create-tag' + ".*"), "post", (options) => {
+	let params = getPostParams(options.body);
+	console.log(params);
+	let result = {
+		code: 0,
+		message: '添加成功',
+		data: {
+			id: Random.natural( 1, 9999 ),
+			tagName: params['tagName'],
+			categoryId: params['categoryId'],
+		},
+	};
+
+	return Mock.mock(result);
 });
