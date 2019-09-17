@@ -47,6 +47,7 @@ const Common = (state = initState, action) => {
                 tabBarShow: action.isShow,
             };
         case Actions.setMenuList:
+            action.currentMenuList.push(menuType.goHome);
             return {
                 ...state,
                 menuList: action.currentMenuList.map(type => {return state.menuConfig.menuItems[type]}),

@@ -1,0 +1,15 @@
+.add-category .am-tag {
+	margin: 10px 10px 0 10px;
+	padding: 0 10px;
+	background-color: #fff;
+	color: #108ee9;
+	border: 1px solid #108ee9 !important;
+	border-radius: 3px;
+}
+.add-category .am-tag-close {
+	color: #ef3434;
+}
+
+.add-category .add-tag .am-list-brief {
+	white-space: normal !important;
+}

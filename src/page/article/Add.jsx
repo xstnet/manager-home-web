@@ -239,7 +239,7 @@ class Add extends React.Component {
         console.log(value, selectedData);
         let checked = selectedData.findIndex(item => (item === value));
         if (checked !== -1) {
-            selectedData.splice(checked,1);
+            selectedData.splice(checked, 1);
         } else {
             selectedData.push(value);
         }

@@ -18,6 +18,7 @@ export const menuType = {
     managerTag: 'MANAGER_TAG',
     logout: 'LOGOUT',
     setting: 'SETTING',
+    goHome: 'GO_HOME',
 };
 
 export const menuItems = {
@@ -80,5 +81,10 @@ export const menuItems = {
         key: menuType.setting,
         name: '设置',
         icon: '',
+    },
+    [menuType.goHome]: {
+        key: menuType.goHome,
+        name: '返回首页',
+        icon: 'icon-home',
     },
 };

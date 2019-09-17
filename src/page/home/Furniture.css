@@ -9,3 +9,11 @@
 .furniture-list-action .am-list-extra  a{
     padding: 0 10px;
 }
+
+
+/*
+furnitureAdd
+*/
+.add-furniture-main .am-input-control input,  .add-furniture-main .am-textarea-control textarea{
+    text-align: right;
+}

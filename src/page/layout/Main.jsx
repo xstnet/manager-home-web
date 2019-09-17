@@ -112,6 +112,9 @@ class Main extends React.Component {
             case menuType.addFurn:
                 Control.go('/furniture/add');
                 return false;
+            case menuType.goHome:
+                Control.go('/');
+                return false;
         }
 
         return  true;

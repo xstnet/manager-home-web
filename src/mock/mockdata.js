@@ -268,37 +268,74 @@ Mock.mock(RegExp('/home/get-room-list' + ".*"), "get", (options) => {
 				{
 					id: 1,
 					icon: 'icon-woshi',
-					title: '卧室1',
-					furnitureList: [],
+					name: '卧室',
+					furnitureList: [
+						{
+							label: '黑色格子',
+							value: 1,
+						},
+						{
+							label: '黑色格子2',
+							value: 2,
+						},
+						{
+							label: '黑色格子3',
+							value: 3,
+							children: [
+								{
+									label: '黑色格子3-1',
+									value: 31,
+									children: [
+										{
+											label: '黑色格子3-1-1',
+											value: 311,
+											children: [
+												{
+													label: '黑色格子3-1-1-1',
+													value: 3111,
+													children: [
+														{
+															label: '黑色格子3-1-1-1-1',
+															value: 31111,
+														}
+													]
+												}
+											],
+										},
+									],
+								},
+							],
+						},
+					],
 				},
 				{
 					id: 2,
 					icon: 'icon-keting',
-					title: '客厅',
+					name: '客厅',
 					furnitureList: [],
 				},
 				{
 					id: 3,
 					icon: 'icon-chufang',
-					title: '厨房',
+					name: '厨房',
 					furnitureList: [],
 				},
 				{
 					id: 4,
 					icon: 'icon-yangtai',
-					title: '阳台',
+					name: '阳台',
 					furnitureList: [],
 				},
 				{
 					id: 5,
 					icon: 'icon-weishengjian',
-					title: '卫生间',
+					name: '卫生间',
 					furnitureList: [],
 				},
 				{
 					id: 'add',
 					icon: 'icon-plus',
-					title: '添加房间',
+					name: '添加房间',
 					furnitureList: [],
 				},
 			]
