@@ -19,7 +19,8 @@ import {
 } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { connect } from 'react-redux';
-import {getCategoryList, createTag} from '../../api/api';
+import { handleAddTag } from '../../store/reducers/category/action';
+import {getCategoryList, createTag, createArticle} from '../../api/api';
 import './Add.css';
 
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -121,6 +122,7 @@ class Add extends React.Component {
             },
             colorValue: ['#00FF00'],
             ownUser: [],
+            addButtonText: '添加',
         };
     }
 
@@ -195,7 +197,7 @@ class Add extends React.Component {
                 selectedData: [],
             },
             category: val,
-        })
+        });
 
     };
 
@@ -234,9 +236,10 @@ class Add extends React.Component {
 
     onChangeTag = (value) => {
         let selectedData = this.state.tagPicker.selectedData;
+        console.log(value, selectedData);
         let checked = selectedData.findIndex(item => (item === value));
         if (checked !== -1) {
-            delete selectedData[checked];
+            selectedData.splice(checked,1);
         } else {
             selectedData.push(value);
         }
@@ -301,7 +304,9 @@ class Add extends React.Component {
         }
 
         console.log(params);
-        Toast.success('添加成功!', 2);
+        createArticle(params).then(result => {
+            this.setState({addButtonText: '继续添加'});
+        });
     };
 
     // 点击创建标签事件
@@ -315,8 +320,20 @@ class Add extends React.Component {
         Modal.prompt('添加标签', `当前分类: ${categoryName}`, [
             { text: '取消' },
             { text: '添加', onPress: value => {
-                this.props.createTag(this.state.category[0], value);
-                } },
+                    createTag(this.state.category[0], value).then(result => {
+                        let newTag = {label: result.data.tagName, value: result.data.id, count: 0};
+                        this.setState({
+                            tagPicker: {
+                                ...this.state.tagPicker,
+                                data: [...this.state.tagPicker.data, newTag],
+                                selectedData: [...this.state.tagPicker.selectedData, newTag.value],
+                            }
+                        });
+                        this.props.handleAddTag(newTag.value, newTag.label, result.data.categoryId);
+
+                    });
+                }
+            },
         ], 'default');
     };
 
@@ -453,7 +470,7 @@ class Add extends React.Component {
                 <br />
                 <br />
 
-                <Button onClick={this.onSubmit} type="primary">添加</Button>
+                <Button onClick={this.onSubmit} type="primary">{this.state.addButtonText}</Button>
                 <br />
                 <br />
                 <br />
@@ -493,7 +510,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     getCategoryList: () => dispatch(getCategoryList()),
-    createTag: (categoryId, tagName) => dispatch(createTag(categoryId, tagName)),
+    handleAddTag: (id, tagName, categoryId) => dispatch(handleAddTag(id, tagName, categoryId)),
 });
 
 export default connect(

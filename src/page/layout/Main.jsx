@@ -57,7 +57,7 @@ class Main extends React.Component {
     onBack = () => {
         console.log('onBack', Control.path);
         if (Control.path !== '/') {
-            if (Control.path === '/search') {
+            if (Control.path === '/search' || Control.path === '/article/add') {
                 this.props.setTabBarIsShow(true);
             }
             Control.go(-1);

@@ -6,11 +6,19 @@
  */
 // import { addTodo } from '@/api/Api.js'
 import * as Actions from '../Actions'
+import {menuItems, menuType} from "../../../config/menuList";
 
-const Home = (state = {todoList:[]}, action) => {
-    return state;
+const initState = {
+    roomList: [], // 包含:furnitureList
+};
+
+const Home = (state = initState, action) => {
     switch (action.type) {
-
+        case Actions.setRoomList:
+            return {
+                ...state,
+                roomList: action.roomList,
+            };
         default:
             return state;
     }

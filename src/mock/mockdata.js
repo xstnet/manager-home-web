@@ -23,6 +23,7 @@ Mock.setup({
 	timeout: '200-600' // 表示响应时间介于 200 和 600 毫秒之间，默认值是'10-100'。
 });
 
+// 获取用户信息
 Mock.mock('/get-user-info', {
 	code: 0,
 	message: 'ok',
@@ -228,9 +229,7 @@ Mock.mock(RegExp('/get-furniture-list' + ".*"), "get", (options) => {
 });
 
 // 添加标签
-Mock.mock('/create-tag', );
-
-Mock.mock(RegExp('/create-tag' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/category/create-tag' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params);
 	let result = {
@@ -240,6 +239,100 @@ Mock.mock(RegExp('/create-tag' + ".*"), "post", (options) => {
 			id: Random.natural( 1, 9999 ),
 			tagName: params['tagName'],
 			categoryId: params['categoryId'],
+		},
+	};
+
+	return Mock.mock(result);
+});
+
+// 添加物品
+Mock.mock(RegExp('/article/create-article' + ".*"), "post", (options) => {
+	let params = getPostParams(options.body);
+	console.log(params);
+	let result = {
+		code: 0,
+		message: '添加成功',
+		data: {},
+	};
+
+	return Mock.mock(result);
+});
+
+// 获取房间列表
+Mock.mock(RegExp('/home/get-room-list' + ".*"), "get", (options) => {
+	let result = {
+		code: 0,
+		message: 'ok',
+		data: {
+			roomList: [
+				{
+					id: 1,
+					icon: 'icon-woshi',
+					title: '卧室1',
+					furnitureList: [],
+				},
+				{
+					id: 2,
+					icon: 'icon-keting',
+					title: '客厅',
+					furnitureList: [],
+				},
+				{
+					id: 3,
+					icon: 'icon-chufang',
+					title: '厨房',
+					furnitureList: [],
+				},
+				{
+					id: 4,
+					icon: 'icon-yangtai',
+					title: '阳台',
+					furnitureList: [],
+				},
+				{
+					id: 5,
+					icon: 'icon-weishengjian',
+					title: '卫生间',
+					furnitureList: [],
+				},
+				{
+					id: 'add',
+					icon: 'icon-plus',
+					title: '添加房间',
+					furnitureList: [],
+				},
+			]
+		},
+	};
+
+	return Mock.mock(result);
+});
+
+// 添加分类
+Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
+	let params = getPostParams(options.body);
+	console.log(params, options);
+
+	let categoryId = Random.natural( 100, 9999 );
+	let tagList = [];
+	for (let i = 0; i < params.tagList.split('%2C').length; i++) {
+		tagList.push({
+			id: Random.natural( 100, 9999 ),
+			categoryId,
+			count: 0,
+			name: params.tagList[i],
+		});
+	}
+	let result = {
+		code: 0,
+		message: '添加成功',
+		data: {
+			category: {
+				id: categoryId,
+				name: params.name,
+				count: 0,
+				tagList,
+			},
 		},
 	};
 

@@ -11,6 +11,7 @@ class Routers extends React.Component {
                 {/*首页,  我的家*/}
                 <Route path="/>" {...this.props.commonAction} common={this.props.common} component={ Page.Home }></Route>
                 <Route path="/furniture-detail/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureDetail }></Route>
+                <Route path="/furniture/add>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureAdd }></Route>
                 <Route path="/furniture/:roomId/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.Furniture }></Route>
 
                 {/*物品管理*/}
@@ -23,6 +24,7 @@ class Routers extends React.Component {
 
                 {/*类目*/}
                 <Route path="/category>" {...this.props.commonAction} common={this.props.common}  component={ Page.Category }></Route>
+                <Route path="/category/add>" {...this.props.commonAction} common={this.props.common}  component={ Page.CategoryAdd }></Route>
                 <Route path="/category/detail/:categoryId>" {...this.props.commonAction} common={this.props.common}  component={ Page.CategoryDetail }></Route>
                 <Route path="/category/taglist/:categoryId>" {...this.props.commonAction} common={this.props.common}  component={ Page.TagList }></Route>
 

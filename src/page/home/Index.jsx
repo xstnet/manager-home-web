@@ -5,40 +5,8 @@ import React from 'react';
 import {Grid} from "antd-mobile";
 import { Control } from 'react-keeper';
 import { connect } from 'react-redux';
+import { getRoomList } from '../../api/api';
 import MySvg from '../layout/MySvg';
-
-const homeGridList = [
-    {
-        id: '1',
-        icon: 'icon-woshi',
-        title: '卧室',
-    },
-    {
-        id: '1',
-        icon: 'icon-keting',
-        title: '客厅',
-    },
-    {
-        id: '1',
-        icon: 'icon-chufang',
-        title: '厨房',
-    },
-    {
-        id: '1',
-        icon: 'icon-yangtai',
-        title: '阳台',
-    },
-    {
-        id: '1',
-        icon: 'icon-weishengjian',
-        title: '卫生间',
-    },
-    {
-        id: 'add',
-        icon: 'icon-plus',
-        title: '添加房间',
-    },
-];
 
 class Index extends React.Component {
     componentDidMount() {
@@ -50,9 +18,10 @@ class Index extends React.Component {
         ]);
         this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
         this.props.setPageTitle("我的家");
+        this.props.getRoomList(0);
     };
 
-    onClick = (item, index) => {
+	onClickRoom = (item, index) => {
         // 跳转到家具列表页面
         if (item.id !== 'add') {
             Control.go(`/furniture/${item.id}/0`);
@@ -74,9 +43,9 @@ class Index extends React.Component {
     render() {
         return <div>
             <p className="my-home-title">{this.props.common.userInfo.username}的小窝</p>
-            <Grid data={homeGridList}
+            <Grid data={this.props.home.roomList}
                   columnNum={3}
-                  onClick={this.onClick}
+                  onClick={this.onClickRoom}
                   renderItem={dataItem => (
                       <div style={{ padding: '12.5px' }}>
                           <MySvg icon={dataItem.icon} style={{fontSize: '65px'}}/>
@@ -91,11 +60,11 @@ class Index extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    // common: state.Common,
+    home: state.Home,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    // toggleTodo: id => dispatch(toggleTodo(id)),
+	getRoomList: homeId => dispatch(getRoomList(homeId)),
 });
 
 export default connect(

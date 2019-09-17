@@ -8,3 +8,9 @@
 import * as Actions from '../Actions';
 
 
+export const handleAddTag = (id, tagName, categoryId) => ({
+	type: Actions.addTag,
+	id,
+	tagName,
+	categoryId: parseInt(categoryId),
+});

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {List } from 'antd-mobile';
-import {Control} from 'react-keeper'
+import {Control} from 'react-keeper';
 
 const Item = List.Item;
 const Brief = Item.Brief;

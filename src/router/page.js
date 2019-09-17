@@ -12,6 +12,7 @@ import LoadComponents from "../utils/LoadComponents";
 export const Home = LoadComponents(() => import('../page/home/Index.jsx'));
 export const Furniture = LoadComponents(() => import('../page/home/Furniture.jsx'));
 export const FurnitureDetail = LoadComponents(() => import('../page/home/FurnitureDetail.jsx'));
+export const FurnitureAdd = LoadComponents(() => import('../page/home/FurnitureAdd.jsx'));
 
 // 搜索页面
 export const Search = LoadComponents(() => import('../page/search/Index.jsx'));
@@ -23,6 +24,7 @@ export const ArticleDetail = LoadComponents(() => import('../page/article/Detail
 
 // 类目
 export const Category = LoadComponents(() => import('../page/category/Index.jsx'));
+export const CategoryAdd = LoadComponents(() => import('../page/category/Add.jsx'));
 export const CategoryDetail = LoadComponents(() => import('../page/category/Detail.jsx'));
 export const TagList = LoadComponents(() => import('../page/category/TagList.jsx'));
 

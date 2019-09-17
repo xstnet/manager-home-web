@@ -86,13 +86,33 @@ export const getArticleList = (id, page = 1) => {
 
 // 创建新标签
 export function createTag(categoryId, tagName) {
+	return Http.post('/category/create-tag', {categoryId, tagName});
+}
+
+// 添加物品
+export function createArticle(params) {
+	return Http.post('/article/create-article', params);
+}
+
+// 添加类目
+export function createCategory(params) {
 	return dispatch => {
-		Http.post('/create-tag', {categoryId, tagName}).then(res => {
+		Http.post('/category/create-category', params).then(res => {
 			dispatch({
-				type: Actions.addTag,
-				id: res.data.id,
-				tagName: res.data.tagName,
-				categoryId: parseInt(res.data.categoryId),
+				type: Actions.addCategoryList,
+				category: res.data.category,
+			});
+		});
+	};
+}
+
+// 获取房间列表
+export function getRoomList(homeId = 0) {
+	return dispatch => {
+		Http.get('/home/get-room-list', {homeId}).then(res => {
+			dispatch({
+				type: Actions.setRoomList,
+				roomList: res.data.roomList,
 			});
 		});
 	};

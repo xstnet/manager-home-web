@@ -6,6 +6,7 @@ import {List , Icon, Button} from 'antd-mobile';
 import {Control} from 'react-keeper'
 import {getFurnitureList} from '../../api/api';
 import './Furniture.css';
+import {connect} from "react-redux";
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -28,10 +29,17 @@ class Furniture extends React.Component {
             this.props.common.menuConfig.type.addFurn,
             this.props.common.menuConfig.type.managerFurn,
         ]);
+        this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
         getFurnitureList(this.state.roomId, this.state.furnitureId).then(result => {
             this.setState({furnitureList: result.data.list});
         });
     }
+
+    listonNavBarMenuSelect = node => {
+        if (node.props.value === this.props.common.menuConfig.type.addFurn) {
+            Control.go('/furniture/add');
+        }
+    };
 
     onListItemClick = id => {
         Control.go('/article');
@@ -76,4 +84,15 @@ class Furniture extends React.Component {
     }
 }
 
-export default Furniture;
+const mapStateToProps = (state, ownProps) => ({
+    // common: state.Common,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    // toggleTodo: id => dispatch(toggleTodo(id)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Furniture);

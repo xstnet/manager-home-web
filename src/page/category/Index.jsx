@@ -52,7 +52,17 @@ class Index extends React.Component {
             this.props.common.menuConfig.type.editCategory,
         ]);
         this.props.getCategoryList(0);
+        this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
     }
+
+    listonNavBarMenuSelect = node => {
+        if (node.props.value === this.props.common.menuConfig.type.addCategory) {
+            Control.go('/category/add');
+        }
+        if (node.props.value === this.props.common.menuConfig.type.editCategory) {
+            // console.log('管理房间');
+        }
+    };
 
     onClick = id => {
         Control.go('/category/detail/'+id);
