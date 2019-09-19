@@ -20,7 +20,7 @@ import {
 import { createForm } from 'rc-form';
 import { connect } from 'react-redux';
 import { handleAddTag } from '../../store/reducers/category/action';
-import {getCategoryList, createTag, createArticle} from '../../api/api';
+import {getCategoryList, createTag, createArticle, getRoomList} from '../../api/api';
 import './Add.css';
 
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -44,51 +44,6 @@ const imageData = [{
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
 
-const locationTree = [
-    {
-        label: '黑色衣柜',
-        value: 1,
-        children: [
-            {
-                label: '黑色衣柜2',
-                value: 11,
-            },
-        ],
-    },
-    {
-        label: '白色衣柜',
-        value: 2,
-        children: [
-            {
-                label: '黑色衣柜3',
-                value: 21,
-            },
-            {
-                label: '黑色衣柜44',
-                value: 211,
-                children: [
-                    {
-                        label: '黑色衣柜4',
-                        value: 2111,
-                        children: [
-                            {
-                                label: '黑色衣柜4',
-                                value: 21111,
-                                children: [
-                                    {
-                                        label: '黑色衣柜100',
-                                        value: 211111,
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                ]
-            }
-        ]
-    },
-];
-
 class Add extends React.Component {
 
     constructor(props) {
@@ -96,6 +51,7 @@ class Add extends React.Component {
 
         this.state = {
             quantity: 1,
+            roomId: [],
             buyDate: now,
             file: {
                 files: imageData,
@@ -110,19 +66,27 @@ class Add extends React.Component {
             price: 0,
             comment: '',
             category: [],
-            furniture: [],
-            furnitureSub: [],
-
-            // 家具格子
-            furnitureGrid: {
-                disabled: true,
-                message: '请先选择家具',
-                arrow: 'empty',
+            furniture: {
                 data: [],
+                value: [],
+                message: '无可用项',
+                disabled: true,
+                arrow: 'empty',
+            },
+            subFurniture: {
+                data: [],
+                value: [],
+                message: '无可用项',
+                disabled: true,
+                arrow: 'empty',
             },
             colorValue: ['#00FF00'],
             ownUser: [],
-            addButtonText: '添加',
+            addButton: {
+                text: '添加',
+                disabled: false,
+                loading: false,
+            },
         };
     }
 
@@ -136,15 +100,11 @@ class Add extends React.Component {
         if (this.props.category.categoryList.length === 0) {
             this.props.getCategoryList();
         }
+        if (this.props.home.roomList.length === 0) {
+            this.props.getRoomList(0);
+        }
 
         this.setState({ownUser: [this.props.common.userInfo.id,]});
-
-
-        setTimeout(() => {
-
-        }, 1000);
-
-        // this.autoFocusInst.focus();
     };
 
     componentWillReceiveProps(props) {
@@ -152,7 +112,6 @@ class Add extends React.Component {
     }
 
     onQuantityChange = (quantity) => {
-        // console.log(val);
         this.setState({ quantity });
     };
 
@@ -201,39 +160,6 @@ class Add extends React.Component {
 
     };
 
-    // 选择房间和家具 和第一个格子, 上层三级选择
-    onChangeHomeFurniture = val => {
-        console.log(val);
-        if (val.length === 0) {
-            return false;
-        }
-        let lastOption;
-        let current = locationTree;
-        for (let i = 0; i < val.length; i++) {
-            lastOption = current.find((item) => (item.value === val[i]));
-            if (lastOption === undefined)  {
-                return false;
-            }
-            current = lastOption.children ? lastOption.children : [];
-        }
-        let furnitureGrid = {
-            disabled: true,
-            message: '没有可用的格子',
-            arrow: 'empty',
-            data: [],
-        };
-        if (Array.isArray(lastOption.children) && lastOption.children.length > 0) {
-            furnitureGrid = {
-                disabled: false,
-                message: '请选择存储格子',
-                arrow: 'horizontal',
-                data: lastOption.children,
-
-             };
-        }
-        this.setState({furnitureGrid, furniture: val});
-    };
-
     onChangeTag = (value) => {
         let selectedData = this.state.tagPicker.selectedData;
         console.log(value, selectedData);
@@ -277,10 +203,23 @@ class Add extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault();
+        if (this.state.articleName.length <= 0) {
+            Toast.info('请填写物品名称!', 2);
+            return false;
+        }
+        if (this.state.category.length <= 0) {
+            Toast.info('请选择物品分类!', 2);
+            return false;
+        }
+        if (this.state.roomId.length === 0) {
+            Toast.info('请选择存放房间!', 2);
+            return false;
+        }
+
         let params = {
             name: this.state.articleName,
-            furniture: this.state.furniture,
-            furnitureSub: this.state.furnitureSub,
+            roomId: this.state.roomId[0],
+            furnitureIds: this.state.furniture.value.length === 0 ? 0 : [...this.state.furniture.value, ...this.state.subFurniture.value].join(','),
             tags: this.state.tagPicker.selectedData,
             quantity: this.state.quantity,
             price: this.state.price,
@@ -290,22 +229,102 @@ class Add extends React.Component {
             comment: this.state.comment,
             ownUser: this.state.ownUser,
         };
-        if (params.name.length <= 0) {
-            Toast.info('请填写物品名称!', 2);
-            return false;
-        }
-        if (params.furniture.length <= 1) {
-            Toast.info('请选择存放位置!', 2);
-            return false;
-        }
-        if (params.category.length <= 0) {
-            Toast.info('请选择物品分类!', 2);
-            return false;
-        }
 
         console.log(params);
+        this.setState({addButton: {
+                ...this.state.addButton,
+                disabled: true,
+                loading: true,
+            }});
+        // 添加物品
         createArticle(params).then(result => {
-            this.setState({addButtonText: '继续添加'});
+            this.setState({addButton: {
+                    ...this.state.addButton,
+                    text: '继续添加',
+                    disabled: false,
+                    loading: false,
+                }});
+        });
+    };
+
+    onChangeRoom = (value) => {
+        if (value === this.state.roomId) {
+            return false;
+        }
+        let roomId = value[0];
+        let roomList = this.props.home.roomList;
+        let room = roomList.find(item => (item.id === roomId));
+        let furnitureList = room.furnitureList;
+
+        console.log(value, this.props.home.roomList);
+
+        this.setState({
+            roomId: value,
+            furniture: {
+                data: furnitureList,
+                value: [],
+                disabled: furnitureList.length === 0,
+                arrow: furnitureList.length === 0 ? 'empty' : 'horizontal',
+                message: furnitureList.length === 0 ? '无可用项' : ''
+            },
+            subFurniture: {
+                data: [],
+                value: [],
+                disabled: true,
+                arrow: 'empty',
+                message: '无可用项',
+            },
+        });
+        console.log(this.state);
+    };
+
+    onChangeFurniture = value => {
+        if (value[value.length-1] === '不选') {
+            value.splice(value.length - 1, 1);
+        }
+        if (value.length === 0) {
+            return false;
+        }
+        let lastOption;
+        let current = this.props.home.roomList.find(item => (item.id === this.state.roomId[0])).furnitureList;
+        console.log(current, 'current');
+        for (let i = 0; i < value.length; i++) {
+            lastOption = current.find((item) => (item.value === value[i]));
+            if (lastOption === undefined)  {
+                return false;
+            }
+            current = lastOption.children ? lastOption.children : [];
+        }
+        let subFurniture = {
+            disabled: true,
+            message: '无可用项',
+            arrow: 'empty',
+            data: [],
+        };
+        if (Array.isArray(lastOption.children) && lastOption.children.length > 0 && value.length === 3) {
+            subFurniture = {
+                disabled: false,
+                message: '选择4-5级格子',
+                arrow: 'horizontal',
+                data: lastOption.children,
+            };
+        }
+        subFurniture.value = [];
+        this.setState({subFurniture, furniture: {...this.state.furniture, value}});
+    };
+
+    onChangeSubFurniture = value => {
+        if (value[value.length-1] === '不选') {
+            value.splice(value.length - 1, 1);
+        }
+        if (value.length === 0) {
+            return false;
+        }
+        this.setState({
+            subFurniture: {
+                ...this.state.subFurniture,
+                value,
+            }
         });
     };
 
@@ -341,6 +360,7 @@ class Add extends React.Component {
         const { getFieldProps, getFieldDecorator } = this.props.form;
         const { files } = this.state.file;
         let category = this.props.category.categoryList.map(item => {return {label:item.name,value:item.id}});
+        let roomList = this.props.home.roomList.map(item => {return {label:item.name,value:item.id}});
         return (
             <div className="add-article-wrap">
                 <List renderHeader={() => '添加物品'}>
@@ -435,25 +455,29 @@ class Add extends React.Component {
                 </List>
                 {/*存储位置*/}
                 <List renderHeader={() => '存储位置'}>
-                    <Picker title="存储家具" extra="存储家具"
-                        cols={3}
-                            value={this.state.furniture}
-                        data={locationTree}
-                        onChange={this.onChangeHomeFurniture}
+                    <Picker data={roomList} title="选择房间" cols={1} extra="选择房间"
+                            value={this.state.roomId}
+                            onChange={this.onChangeRoom}
                     >
-                        <List.Item arrow="horizontal">存储家具</List.Item>
-
+                        <List.Item  arrow="horizontal">所属房间</List.Item>
                     </Picker>
-                    <Picker title="存储格子" extra={this.state.furnitureGrid.message}
-                         cols={3}
-                            value={this.state.furnitureSub}
-                         data={this.state.furnitureGrid.data}
-                            disabled={this.state.furnitureGrid.disabled}
-                        onChange={(val) => {
-                            this.setState({furnitureSub: val});
-                        }}
+                    {/*家具*/}
+                    <Picker data={this.state.furniture.data} title="所属家具" cols={3}
+                            value={this.state.furniture.value}
+                            onChange={this.onChangeFurniture}
+                            disabled={this.state.furniture.disabled}
+                            extra={this.state.furniture.message}
                     >
-                        <List.Item arrow={this.state.furnitureGrid.arrow}>存储格子</List.Item>
+                        <List.Item arrow={this.state.furniture.arrow} >所属家具</List.Item>
+                    </Picker>
+                    {/*容器*/}
+                    <Picker data={this.state.subFurniture.data} title="所属容器" cols={2}
+                            value={this.state.subFurniture.value}
+                            onChange={this.onChangeSubFurniture}
+                            extra={this.state.subFurniture.message}
+                            disabled={this.state.subFurniture.disabled}
+                    >
+                        <List.Item arrow={this.state.subFurniture.arrow} >所属容器</List.Item>
                     </Picker>
                 </List>
                 {/*图片*/}
@@ -470,7 +494,14 @@ class Add extends React.Component {
                 <br />
                 <br />
 
-                <Button onClick={this.onSubmit} type="primary">{this.state.addButtonText}</Button>
+                <Button
+                    onClick={this.onSubmit}
+                    loading={this.state.addButton.loading}
+                    disabled={this.state.addButton.disabled}
+                    type="primary"
+                >
+                    {this.state.addButton.text}
+                </Button>
                 <br />
                 <br />
                 <br />
@@ -506,10 +537,12 @@ const AddForm = createForm()(Add);
 
 const mapStateToProps = (state, ownProps) => ({
     category: state.Category,
+    home: state.Home,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     getCategoryList: () => dispatch(getCategoryList()),
+    getRoomList: homeId => dispatch(getRoomList(homeId)),
     handleAddTag: (id, tagName, categoryId) => dispatch(handleAddTag(id, tagName, categoryId)),
 });
 

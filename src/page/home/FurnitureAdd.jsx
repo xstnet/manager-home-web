@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {InputItem, List, Button, Tag, TextareaItem, Modal, Picker} from 'antd-mobile';
-import { getRoomList } from '../../api/api';
+import { createFurniture, getRoomList } from '../../api/api';
 
 import {connect} from "react-redux";
 import './Furniture.css';
@@ -48,18 +48,22 @@ class FurnitureAdd extends React.Component {
         }
     }
 
-
+    // 提交
 	onSubmit = () => {
 		let params = {
 			name: this.state.name,
-			tagList: this.state.tagList.join(','),
+			roomId: this.state.roomId[0],
+            parentIds: this.state.furniture.value.length === 0 ? 0 : [...this.state.furniture.value, ...this.state.subFurniture.value].join(','),
 			comment: this.state.comment,
 		};
 		console.log(params);
-		this.props.createCategory(params);
+		this.props.createFurniture(params);
 	};
 
     onChangeRoom = (value) => {
+        if (value === this.state.roomId) {
+            return false;
+        }
         let roomId = value[0];
         let roomList = this.props.home.roomList;
         let room = roomList.find(item => (item.id === roomId));
@@ -88,6 +92,12 @@ class FurnitureAdd extends React.Component {
     };
 
     onChangeFurniture = value => {
+        if (value[value.length-1] === '不选') {
+            value.splice(value.length - 1, 1);
+        }
+        if (value.length === 0) {
+            return false;
+        }
         let lastOption;
         let current = this.props.home.roomList.find(item => (item.id === this.state.roomId[0])).furnitureList;
         console.log(current, 'current');
@@ -104,7 +114,7 @@ class FurnitureAdd extends React.Component {
             arrow: 'empty',
             data: [],
         };
-        if (Array.isArray(lastOption.children) && lastOption.children.length > 0) {
+        if (Array.isArray(lastOption.children) && lastOption.children.length > 0 && value.length === 3) {
             subFurniture = {
                 disabled: false,
                 message: '选择4-5级格子',
@@ -117,6 +127,12 @@ class FurnitureAdd extends React.Component {
     };
 
     onChangeSubFurniture = value => {
+        if (value[value.length-1] === '不选') {
+            value.splice(value.length - 1, 1);
+        }
+        if (value.length === 0) {
+            return false;
+        }
         this.setState({
             subFurniture: {
                 ...this.state.subFurniture,
@@ -190,6 +206,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+    createFurniture: params => dispatch(createFurniture(params)),
     getRoomList: homeId => dispatch(getRoomList(homeId)),
 });
 

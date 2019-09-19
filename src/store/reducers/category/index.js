@@ -18,7 +18,7 @@ const Category = (state = initState, action) => {
                 ...state,
                 categoryList: action.categoryList,
             };
-        case Actions.addCategoryList:
+        case Actions.addCategory:
             return {
                 ...state,
                 categoryList: [...state.categoryList, action.category],

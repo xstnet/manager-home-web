@@ -99,8 +99,20 @@ export function createCategory(params) {
 	return dispatch => {
 		Http.post('/category/create-category', params).then(res => {
 			dispatch({
-				type: Actions.addCategoryList,
+				type: Actions.addCategory,
 				category: res.data.category,
+			});
+		});
+	};
+}
+
+// 添加家具
+export function createFurniture(params) {
+	return dispatch => {
+		Http.post('/home/create-furniture', params).then(res => {
+			dispatch({
+				type: Actions.addFurniture,
+				furniture: res.data.furniture,
 			});
 		});
 	};

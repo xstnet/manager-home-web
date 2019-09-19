@@ -4,7 +4,7 @@
 import React from 'react';
 import {List , Icon, Button} from 'antd-mobile';
 import {Control} from 'react-keeper'
-import {getFurnitureList} from '../../api/api';
+import {getFurnitureList, getRoomList} from '../../api/api';
 import './Furniture.css';
 import {connect} from "react-redux";
 
@@ -30,10 +30,16 @@ class Furniture extends React.Component {
             this.props.common.menuConfig.type.managerFurn,
         ]);
         this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
-        getFurnitureList(this.state.roomId, this.state.furnitureId).then(result => {
-            this.setState({furnitureList: result.data.list});
-        });
+        if (this.props.home.roomList.length === 0) {
+            this.props.getRoomList(0);
+        }
+
+        console.log(this.props);
     }
+
+    buildFurnitureData = () => {
+
+    };
 
     listonNavBarMenuSelect = node => {
         if (node.props.value === this.props.common.menuConfig.type.addFurn) {
@@ -52,29 +58,60 @@ class Furniture extends React.Component {
         e.nativeEvent.stopImmediatePropagation();
     };
 
-    componentDidUpdate() {
-        let newFurnitureId = parseInt(this.props.params.furnitureId);
-        if (this.state.furnitureId !== newFurnitureId) {
-            getFurnitureList(this.state.roomId, this.state.furnitureId).then(result => {
-                this.setState({furnitureList: result.data.list, furnitureId: newFurnitureId});
-            });
-        }
-        console.log(this.state.furnitureId, this.props.params.furnitureId)
-    }
+    renderError = (error) => {
+        return <div>
+            {error}
+        </div>
+    };
 
     render() {
+        console.log(3333);
+        let furnitureList = [];
+
+        let parentIds = '';
+
+        if (this.props.home.roomList.length > 0) {
+            let roomId = parseInt(this.props.params.roomId);
+            let currentRoom = this.props.home.roomList.find(item => (item.id === roomId));
+            console.log(currentRoom, 'currentRoom');
+            if (currentRoom === undefined) {
+                return this.renderError('没有找到对应的房间!');
+            }
+            furnitureList = currentRoom.furnitureList;
+            let furnitureIds = this.props.params.furnitureIds;
+            if (furnitureIds !== '0') {
+                let furnitureIdArray = furnitureIds.split('-');
+                for (let i = 0; i < furnitureIdArray.length; i++) {
+                    let currentFurnId = parseInt(furnitureIdArray[i]);
+                    furnitureList = furnitureList.find(item => currentFurnId === item.value);
+                    if (furnitureList === undefined) {
+                        return this.renderError('没有该家具!');
+                    }
+                    furnitureList = furnitureList.children ? furnitureList.children : [];
+                    parentIds += `${currentFurnId}-`;
+                }
+            }
+            if (furnitureList.length === 0) {
+                return this.renderError('该家具下没有格子了!');
+            }
+        }
+
+
         return <div>
             <List className="furniture-list-action" renderHeader={() => '客厅里的家具'}>
                 {
-                    this.state.furnitureList.map(item => {
+                    furnitureList.map(item => {
+                        if (item.value === '不选') {
+                            return '';
+                        }
                         return (
-                            <Item key={`list-item-${item.id}`} arrow="horizontal" multipleLine
+                            <Item key={`list-item-${item.value}`} arrow="horizontal" multipleLine
                                   style={{flexBasis: 'auto !important'}}
-                                  onClick={this.onListItemClick.bind(this, item.id)}
-                                  extra={<Button key={`button-${item.id}`} onClick={this.onShowContainerClick.bind(this, item.id)} size="small" type="primary">查看容器</Button>}
+                                  onClick={this.onListItemClick.bind(this, item.value)}
+                                  extra={<Button key={`button-${item.value}`} onClick={this.onShowContainerClick.bind(this, `${parentIds}${item.value}`)} size="small" type="primary">查看容器</Button>}
                             >
-                                {item.name}
-                                <Brief>包含{item.subCount}个容器, {item.articleCount}件物品 </Brief>
+                                {item.label}
+                                <Brief>包含{item.subFurnitureCount}个容器, {item.articleCount}件物品 </Brief>
                             </Item>
                         )
                     })
@@ -85,11 +122,11 @@ class Furniture extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    // common: state.Common,
+    home: state.Home,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    // toggleTodo: id => dispatch(toggleTodo(id)),
+    getRoomList: homeId => dispatch(getRoomList(homeId)),
 });
 
 export default connect(

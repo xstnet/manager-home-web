@@ -273,31 +273,67 @@ Mock.mock(RegExp('/home/get-room-list' + ".*"), "get", (options) => {
 						{
 							label: '黑色格子',
 							value: 1,
+							articleCount: 0,
+							subFurnitureCount: 0,
 						},
 						{
 							label: '黑色格子2',
 							value: 2,
+							articleCount: 0,
+							subFurnitureCount: 0,
 						},
 						{
 							label: '黑色格子3',
 							value: 3,
+							articleCount: 0,
+							subFurnitureCount: 0,
 							children: [
+								{
+									label: '不选',
+									value: '不选',
+								},
 								{
 									label: '黑色格子3-1',
 									value: 31,
+									articleCount: 0,
+									subFurnitureCount: 0,
 									children: [
+										{
+											label: '不选',
+											value: '不选',
+										},
 										{
 											label: '黑色格子3-1-1',
 											value: 311,
+											articleCount: 0,
+											subFurnitureCount: 0,
 											children: [
+												{
+													label: '不选',
+													value: '不选',
+												},
 												{
 													label: '黑色格子3-1-1-1',
 													value: 3111,
+													articleCount: 0,
+													subFurnitureCount: 0,
 													children: [
+														{
+															label: '不选',
+															value: '不选',
+														},
 														{
 															label: '黑色格子3-1-1-1-1',
 															value: 31111,
-														}
+															articleCount: 0,
+															subFurnitureCount: 0,
+														},
+														{
+															label: '黑色格子3-1-1-1-2',
+															value: 31112,
+															articleCount: 0,
+															subFurnitureCount: 0,
+														},
 													]
 												}
 											],
@@ -372,6 +408,31 @@ Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
 			},
 		},
 	};
+
+	return Mock.mock(result);
+});
+
+
+// 添加分家具
+Mock.mock(RegExp('/home/create-furniture' + ".*"), "post", (options) => {
+	let params = getPostParams(options.body);
+	console.log(params, options);
+
+	let result = {
+		code: 0,
+		message: '添加成功',
+		data: {
+			furniture: {
+				id: Random.natural( 100, 9999 ),
+				roomId: parseInt(params.roomId),
+				name: params.name,
+				articleCount: 0,
+				subFurnitureCount: 0,
+				parentIds: params.parentIds.replace(/%2C/g, ','),
+			},
+		},
+	};
+	console.log(result);
 
 	return Mock.mock(result);
 });
