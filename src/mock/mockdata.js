@@ -413,7 +413,29 @@ Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
 });
 
 
-// 添加分家具
+// 添加房间
+Mock.mock(RegExp('/home/create-home' + ".*"), "post", (options) => {
+	let params = getPostParams(options.body);
+	console.log(params, options);
+
+	let result = {
+		code: 0,
+		message: '添加成功',
+		data: {
+			room: {
+				id: Random.natural( 100, 9999 ),
+				name: params.name,
+				icon: params.fontIcon,
+				furnitureList: [],
+			},
+		},
+	};
+	console.log(result);
+
+	return Mock.mock(result);
+});
+
+// 添加家具
 Mock.mock(RegExp('/home/create-furniture' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params, options);

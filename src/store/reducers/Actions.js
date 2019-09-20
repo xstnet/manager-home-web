@@ -19,13 +19,14 @@ export const setUserInfo = 'SET_USER_INFO';
 
 // home
 export const setRoomList = 'SET_ROOT';　// 房间列表, 包括家具
+export const addRoom = 'ADD_ROOM';　// 添加房间
 export const addFurniture = 'ADD_FURNITURE';　// 添加家具
 
 /**
  * 类目
  */
 export const setCategoryList = 'SET_CATEGORY_LIST';
-export const addCategory = 'ADD_CATEGORY_LIST';
+export const addCategory = 'ADD_CATEGORY';
 export const addTag = 'ADD_TAG';
 
 /**

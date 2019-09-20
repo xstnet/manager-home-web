@@ -10,6 +10,7 @@ class Routers extends React.Component {
             <div>
                 {/*首页,  我的家*/}
                 <Route path="/>" {...this.props.commonAction} common={this.props.common} component={ Page.Home }></Route>
+                <Route path="/room/add>" {...this.props.commonAction} common={this.props.common} component={ Page.RoomAdd }></Route>
                 <Route path="/furniture-detail/:furnitureId>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureDetail }></Route>
                 <Route path="/furniture/add>" {...this.props.commonAction} common={this.props.common}  component={ Page.FurnitureAdd }></Route>
                 <Route path="/furniture/:roomId/:furnitureIds>" {...this.props.commonAction} common={this.props.common}  component={ Page.Furniture }></Route>

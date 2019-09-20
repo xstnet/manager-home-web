@@ -129,3 +129,15 @@ export function getRoomList(homeId = 0) {
 		});
 	};
 }
+
+// 添加房间
+export function createRoom(params) {
+	return dispatch => {
+		Http.post('/home/create-home', params).then(res => {
+			dispatch({
+				type: Actions.addRoom,
+				room: res.data.room
+			});
+		});
+	};
+}

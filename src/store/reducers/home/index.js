@@ -19,6 +19,11 @@ const Home = (state = initState, action) => {
                 ...state,
                 roomList: action.roomList,
             };
+        case Actions.addRoom:
+            return {
+                ...state,
+                roomList: [...state.roomList, action.room],
+            };
         case Actions.addFurniture:
             console.log(action);
             let roomList = state.roomList;

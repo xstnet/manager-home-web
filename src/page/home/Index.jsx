@@ -2,10 +2,10 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {Grid} from "antd-mobile";
+import {Grid, Modal} from "antd-mobile";
 import { Control } from 'react-keeper';
 import { connect } from 'react-redux';
-import { getRoomList } from '../../api/api';
+import {createTag, getRoomList} from '../../api/api';
 import MySvg from '../layout/MySvg';
 
 class Index extends React.Component {
@@ -27,17 +27,20 @@ class Index extends React.Component {
             Control.go(`/furniture/${item.id}/0`);
             return true;
         }
-        console.log('添加家具');
+        this.onAddRoom();
     };
 
     listonNavBarMenuSelect = node => {
         if (node.props.value === this.props.common.menuConfig.type.addRoom) {
-            console.log('添加房间');
-            console.log(this.props.common);
+            this.onAddRoom();
         }
         if (node.props.value === this.props.common.menuConfig.type.managerRoom) {
             console.log('管理房间');
         }
+    };
+
+    onAddRoom = () => {
+        Control.go('/room/add');
     };
 
     render() {
@@ -50,7 +53,7 @@ class Index extends React.Component {
                       <div style={{ padding: '12.5px' }}>
                           <MySvg icon={dataItem.icon} style={{fontSize: '65px'}}/>
                           <div style={{ color: '#888', fontSize: '14px', marginTop: '12px' }}>
-                              <span>{dataItem.title}</span>
+                              <span>{dataItem.name}</span>
                           </div>
                       </div>
                   )}

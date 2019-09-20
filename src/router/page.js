@@ -10,6 +10,7 @@ import LoadComponents from "../utils/LoadComponents";
 
 // 首页, 我的家
 export const Home = LoadComponents(() => import('../page/home/Index.jsx'));
+export const RoomAdd = LoadComponents(() => import('../page/home/RoomAdd.jsx'));
 export const Furniture = LoadComponents(() => import('../page/home/Furniture.jsx'));
 export const FurnitureDetail = LoadComponents(() => import('../page/home/FurnitureDetail.jsx'));
 export const FurnitureAdd = LoadComponents(() => import('../page/home/FurnitureAdd.jsx'));
