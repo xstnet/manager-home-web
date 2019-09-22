@@ -29,5 +29,9 @@ export const CategoryAdd = LoadComponents(() => import('../page/category/Add.jsx
 export const CategoryDetail = LoadComponents(() => import('../page/category/Detail.jsx'));
 export const TagList = LoadComponents(() => import('../page/category/TagList.jsx'));
 
+// 登录页面
+export const Login = LoadComponents(() => import('../page/login/Index.jsx'));
+
 // 个人中心
 export const UserCenter = LoadComponents(() => import('../page/userCenter/Index.jsx'));
+

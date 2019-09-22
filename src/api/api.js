@@ -9,28 +9,10 @@
 import Http from '../utils/Http';
 import * as Actions from '../store/reducers/Actions';
 
-export function getUserInfo1() {
-	return dispatch => {
-		Http.get('/get-user-info').then(res => {
-			dispatch({
-				type: Actions.setUserInfo,
-				userInfo: res.data.userInfo,
-			});
-		});
-	};
+// 获取家具列表
+export function login(username, password) {
+    return Http.post('/login', {username, password}, {message: '登录中。。。'});
 }
-
-export const getUserInfo2 = async () => {
-
-	return dispatch => {
-		Http.get('/get-user-info').then(res => {
-			dispatch({
-				type: Actions.setUserInfo,
-				userInfo: res.data.userInfo,
-			});
-		});
-	};
-};
 
 // 获取用户信息
 export  function getUserInfo () {
@@ -38,7 +20,6 @@ export  function getUserInfo () {
 	return async dispatch => {
 		try {
 			const result = await Http.get('/get-user-info');
-			console.log(result, '3333');
 			dispatch({
 				type: Actions.setUserInfo,
 				userInfo: result.data.userInfo,

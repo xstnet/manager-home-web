@@ -30,20 +30,21 @@ Mock.mock('/get-user-info', {
 	data: {
 		userInfo: {
 			id: 1,
-			username: '娜娜',
+			username: '88888888',
+			nickname: '娜娜',
 			mobile: '13260718253',
 			homeList: [
 				{
 					id: 1,
 					name: '娜娜的小窝',
 					masterId: 1,
-					default: 1,
+					isDefault: 1,
 				},
 				{
 					id: 2,
 					name: '@cname 的小家',
 					masterId: 2,
-					default: 0,
+					isDefault: 0,
 				},
 			],
 			familyMember: [

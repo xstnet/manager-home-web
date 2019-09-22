@@ -72,9 +72,10 @@ class Http {
 		})
 	}
 
-	static post(url, params = {}, tips = {showMsg:true, loading: true}) {
+	static post(url, params = {}, tips = {}) {
+		tips = {showMsg:true, loading: true, message: '提交中...', ...tips};
 		if (tips.loading) {
-			Toast.loading('提交中...', 0);
+			Toast.loading(tips.message, 0);
 		}
 		console.log(params);
 		return new Promise((resolve, reject) => {

@@ -32,6 +32,9 @@ class Routers extends React.Component {
                 {/*个人中心*/}
                 <Route path="/user-center>" {...this.props.commonAction} common={this.props.common}  component={ Page.UserCenter }></Route>
 
+                {/*登录*/}
+                <Route path="/login>" {...this.props.commonAction} component={ Page.Login }></Route>
+
                 <Route miss {...this.props.commonAction} common={this.props.common} component={ Page.Home }></Route>
             </div>
         )
