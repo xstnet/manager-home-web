@@ -2,7 +2,7 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {InputItem, List, Button, Tag, TextareaItem, Modal, Picker} from 'antd-mobile';
+import {InputItem, List, Button, Tag, TextareaItem, Modal, Picker, Toast} from 'antd-mobile';
 import { createFurniture, getRoomList } from '../../api/api';
 
 import {connect} from "react-redux";
@@ -50,10 +50,18 @@ class FurnitureAdd extends React.Component {
 
     // 提交
 	onSubmit = () => {
+        if (this.state.name.length === 0) {
+            Toast.info('请填写家具名称!', 2);
+            return false;
+        }
+        if (this.state.roomId.length === 0) {
+            Toast.info('请选择所属房间!', 2);
+            return false;
+        }
 		let params = {
 			name: this.state.name,
 			roomId: this.state.roomId[0],
-            parentIds: this.state.furniture.value.length === 0 ? 0 : [...this.state.furniture.value, ...this.state.subFurniture.value].join(','),
+            parentIds: this.state.furniture.value.length === 0 ? '0' : [...this.state.furniture.value, ...this.state.subFurniture.value].join(','),
 			comment: this.state.comment,
 		};
 		console.log(params);

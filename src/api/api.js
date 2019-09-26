@@ -1,17 +1,26 @@
 /**
  *
  * Created by PhpStorm.
- * Author: Xu shantong <shantongxu@qq.com>
+ * Author: shantong Xu  <shantongxu@qq.com>
  * Date: 2019/9/10
  * Time: 16:42
  */
 
 import Http from '../utils/Http';
+import Cache from '../utils/Cache';
 import * as Actions from '../store/reducers/Actions';
 
-// 获取家具列表
-export function login(username, password) {
-    return Http.post('/login', {username, password}, {message: '登录中。。。'});
+// 登录
+export const login = async (params) => {
+	try {
+		let result = await Http.post('/login', params, {message: '登录中。。。'});
+		Cache.set('token', result.data.token);
+		Cache.set('homeId', result.data.home_id);
+		Cache.set('isLogin', 1);
+		return result;
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 // 获取用户信息
@@ -19,7 +28,7 @@ export  function getUserInfo () {
 
 	return async dispatch => {
 		try {
-			const result = await Http.get('/get-user-info');
+			const result = await Http.get('/user/get-user-info');
 			dispatch({
 				type: Actions.setUserInfo,
 				userInfo: result.data.userInfo,
@@ -28,6 +37,23 @@ export  function getUserInfo () {
 
 		}
 	};
+}
+
+
+// 登录
+export const init = async () => {
+	try {
+		let userInfoRet = await Http.get('/user/get-user-info', {});
+		let RoomListRet = await Http.get('/home/get-room-list', {});
+		console.log('RoomListRet', RoomListRet);
+
+		return {
+			userInfo: userInfoRet.data,
+			roomList: RoomListRet.data.roomList,
+		};
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 // 获取家具列表
@@ -114,7 +140,7 @@ export function getRoomList(homeId = 0) {
 // 添加房间
 export function createRoom(params) {
 	return dispatch => {
-		Http.post('/home/create-home', params).then(res => {
+		Http.post('/home/create-room', params).then(res => {
 			dispatch({
 				type: Actions.addRoom,
 				room: res.data.room

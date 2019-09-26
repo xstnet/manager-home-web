@@ -20,6 +20,9 @@ const Home = (state = initState, action) => {
                 roomList: action.roomList,
             };
         case Actions.addRoom:
+            // let index = state.roomList.length;
+            // index = index > 0 ? index - 1 : 0;
+            // state.roomList.splice(index, 0, action.room);
             return {
                 ...state,
                 roomList: [...state.roomList, action.room],
@@ -27,7 +30,7 @@ const Home = (state = initState, action) => {
         case Actions.addFurniture:
             console.log(action);
             let roomList = state.roomList;
-            let currentFurniture = roomList.find(item => (item.id === action.furniture.roomId)).furnitureList;
+            let currentFurniture = roomList.find(item => (parseInt(item.id) === action.furniture.roomId)).furnitureList;
             console.log(currentFurniture);
             let furnitureItem = {
                 value: action.furniture.id,
@@ -40,8 +43,11 @@ const Home = (state = initState, action) => {
                 console.log(parentIdArray);
                 for (let i = 0; i < parentIdArray.length; i++) {
                     let parentId = parseInt(parentIdArray[i]);
+                    if (parentId === action.furniture.id) {
+                        break;
+                    }
                     currentFurniture = currentFurniture.find(item => (item.value === parentId));
-                    if (currentFurniture.children === undefined) {
+                    if (!currentFurniture.children) {
                         currentFurniture.children = [{label: '不选', value: '不选'}];
                     }
                     currentFurniture = currentFurniture.children;

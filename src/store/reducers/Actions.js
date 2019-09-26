@@ -8,6 +8,7 @@
 /**
  * 通用布局
  */
+export const setInitData = 'SET_INIT_DATA'; // 设置初始化数据： 用户信息， 房间列表
 export const setPageTitle = 'SET_PAGE_TITLE';
 export const setTabBarIsShow = 'SET_TAB_BAR_IS_SHOW';
 export const setMenuList = 'SET_MENU_LIST';

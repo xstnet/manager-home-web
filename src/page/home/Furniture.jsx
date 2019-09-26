@@ -75,7 +75,7 @@ class Furniture extends React.Component {
             let currentRoom = this.props.home.roomList.find(item => (item.id === roomId));
             console.log(currentRoom, 'currentRoom');
             if (currentRoom === undefined) {
-                return this.renderError('没有找到对应的房间!');
+                return this.renderError('暂无家具， 快来添加一个吧!');
             }
             furnitureList = currentRoom.furnitureList;
             let furnitureIds = this.props.params.furnitureIds;
@@ -98,7 +98,7 @@ class Furniture extends React.Component {
 
 
         return <div>
-            <List className="furniture-list-action" renderHeader={() => '客厅里的家具'}>
+            <List className="furniture-list-action" renderHeader={() => '家具列表'}>
                 {
                     furnitureList.map(item => {
                         if (item.value === '不选') {

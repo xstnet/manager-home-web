@@ -260,7 +260,7 @@ Mock.mock(RegExp('/article/create-article' + ".*"), "post", (options) => {
 });
 
 // 获取房间列表
-Mock.mock(RegExp('/home/get-room-list' + ".*"), "get", (options) => {
+Mock.mock(RegExp('/1home/get-room-list' + ".*"), "get", (options) => {
 	let result = {
 		code: 0,
 		message: 'ok',
@@ -415,7 +415,7 @@ Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
 
 
 // 添加房间
-Mock.mock(RegExp('/home/create-home' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/1home/create-room' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params, options);
 
@@ -437,7 +437,7 @@ Mock.mock(RegExp('/home/create-home' + ".*"), "post", (options) => {
 });
 
 // 添加家具
-Mock.mock(RegExp('/home/create-furniture' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/1home/create-furniture' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params, options);
 

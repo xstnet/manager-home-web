@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {InputItem, List, Button, Tag, TextareaItem, Modal} from 'antd-mobile';
-import {createFurniture} from "../../api/api";
+import {createCategory} from "../../api/api";
 import './Add.css';
 import {connect} from "react-redux";
 
@@ -105,7 +105,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	createFurniture: (params) => dispatch(createFurniture(params)),
+    createCategory: (params) => dispatch(createCategory(params)),
 });
 
 export default connect(

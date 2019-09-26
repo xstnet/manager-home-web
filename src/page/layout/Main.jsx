@@ -1,11 +1,13 @@
 import React from 'react';
 import './Main.css';
 
-import {Popover, NavBar, Icon, TabBar} from 'antd-mobile';
+import {Popover, NavBar, Icon, TabBar, Toast} from 'antd-mobile';
 import {Control} from 'react-keeper';
 import { connect } from 'react-redux';
-import {getUserInfo} from '../../api/api';
+import Cache from '../../utils/Cache';
+import {init} from '../../api/api';
 import {setTabBarIsShow, beforeNavBarMenuSelect, setUserInfo} from '../../store/reducers/common/action';
+import {setRoomList} from '../../store/reducers/home/action';
 
 import Routers from "../../router";
 import MySvg from "./MySvg";
@@ -47,7 +49,12 @@ class Main extends React.Component {
     };
 
     onTabBarSelect = (selectedTab, path) => {
-        console.log(selectedTab, path);
+        let isLogin = parseInt(Cache.get('isLogin'));
+        if (isLogin !== 1) {
+            Toast.info('请先登录', 1.5);
+            Control.go('/login');
+            return;
+        }
         this.setState({
             selectedTab,
         });
@@ -74,12 +81,18 @@ class Main extends React.Component {
     };
 
     componentDidMount = () => {
-
-        // getUserInfo().then(result => {
-        //     console.log('get userInfo', result);
-        //     this.props.setUserInfo(result.data.userInfo);
-        // });
-        this.props.getUserInfo();
+        let isLogin = parseInt(Cache.get('isLogin'));
+        if (isLogin !== 1) {
+            Control.go('/login');
+            return;
+        }
+        Toast.loading('加载中...', 0);
+        init().then(result => {
+            console.log(111, result);
+            Toast.hide();
+            this.props.setUserInfo(result.userInfo);
+            this.props.setRoomList(result.roomList);
+        });
         console.log('view userInfo', this.props.common.userInfo);
 
 
@@ -208,7 +221,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
     beforeNavBarMenuSelect: callback => dispatch(beforeNavBarMenuSelect(callback)),
     setUserInfo: userInfo => dispatch(setUserInfo(userInfo)),
-    getUserInfo: () => dispatch(getUserInfo()),
+    setRoomList: roomList => dispatch(setRoomList(roomList)),
 });
 
 export default connect(

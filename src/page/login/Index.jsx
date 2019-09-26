@@ -2,10 +2,10 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {Button, InputItem, List, TextareaItem} from "antd-mobile";
-// import { Control } from 'react-keeper';
+import {Button, InputItem, List, TextareaItem, Toast} from "antd-mobile";
 import { connect } from 'react-redux';
-import {createTag} from '../../api/api';
+import {login} from '../../api/api';
+import {Control} from "react-keeper";
 
 class Index extends React.Component {
     state = {
@@ -18,7 +18,20 @@ class Index extends React.Component {
     };
 
     onSubmit = () => {
-
+        if (this.state.username.length === 0) {
+            Toast.info('请输入账号!', 2);
+            return false;
+        }
+        if (this.state.password.length === 0) {
+            Toast.info('请输入密码!', 2);
+            return false;
+        }
+        login({username: this.state.username, password: this.state.password}).then(res => {
+            console.log('登录返回结果', res);
+            if (res !== undefined) {
+                Control.go('/');
+            }
+        });
     };
 
     render() {

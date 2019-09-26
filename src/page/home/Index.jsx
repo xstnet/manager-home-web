@@ -43,20 +43,30 @@ class Index extends React.Component {
         Control.go('/room/add');
     };
 
+    renderRoomItem = (dataItem) => (
+        <div style={{ padding: '12.5px' }}>
+            <MySvg icon={dataItem.icon} style={{fontSize: '65px'}}/>
+            <div style={{ color: '#888', fontSize: '14px', marginTop: '12px' }}>
+                <span>{dataItem.name}</span>
+            </div>
+        </div>
+    )
+
     render() {
+        let addData = {
+            id: 'add',
+            icon: 'icon-plus',
+            name: '添加房间',
+            furnitureList: [],
+        };
+        let data = [...this.props.home.roomList];
+        data.push(addData);
         return <div>
-            <p className="my-home-title">{this.props.common.userInfo.username}的小窝</p>
-            <Grid data={this.props.home.roomList}
+            <p className="my-home-title">{this.props.common.userInfo.nickname}的小窝</p>
+            <Grid data={data}
                   columnNum={3}
                   onClick={this.onClickRoom}
-                  renderItem={dataItem => (
-                      <div style={{ padding: '12.5px' }}>
-                          <MySvg icon={dataItem.icon} style={{fontSize: '65px'}}/>
-                          <div style={{ color: '#888', fontSize: '14px', marginTop: '12px' }}>
-                              <span>{dataItem.name}</span>
-                          </div>
-                      </div>
-                  )}
+                  renderItem={this.renderRoomItem}
             />
         </div>
     }
