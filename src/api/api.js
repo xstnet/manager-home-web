@@ -64,7 +64,7 @@ export function getFurnitureList(roomId, parentId = 0) {
 // 获取类目列表
 export function getCategoryList() {
 	return dispatch => {
-		Http.get('/get-category-list').then(res => {
+		Http.get('/category/get-category-list').then(res => {
 			dispatch({
 				type: Actions.setCategoryList,
 				categoryList: res.data.categoryList,

@@ -27,7 +27,7 @@ class Index extends React.Component {
                     </div>
                 </div>
                 <div className="user-cover-right">
-                    <div className="user-cover-name">-- {this.props.common.userInfo.username}</div>
+                    <div className="user-cover-name">-- {this.props.common.userInfo.nickname}</div>
                     <div className="user-cover-mobile">{this.props.common.userInfo.mobile}</div>
                 </div>
                 <span style={{clear: 'both'}}></span>

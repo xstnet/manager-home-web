@@ -2,47 +2,13 @@
  * Created by shantong on 2018/4/29.
  */
 import React from 'react';
-import {List , Icon} from 'antd-mobile';
+import {List, Icon, Button} from 'antd-mobile';
 import {Control} from 'react-keeper';
 import {connect} from 'react-redux';
 import {getCategoryList} from '../../api/api';
 
 const Item = List.Item;
 const Brief = Item.Brief;
-
-const categoryList = [
-    {
-        id: 0,
-        name: '未分类',
-        count: 200,
-    },
-    {
-        id: 1,
-        name: '上衣',
-        count: 200,
-    },
-    {
-        id: 2,
-        name: '下衣',
-        count: 200,
-    },
-    {
-        id: 3,
-        name: '饰品',
-        count: 200,
-    },
-    {
-        id: 4,
-        name: '药品',
-        count: 200,
-    },
-    {
-        id: 5,
-        name: '杂项',
-        count: 200,
-    },
-];
-
 
 class Index extends React.Component {
     componentDidMount() {
@@ -64,22 +30,30 @@ class Index extends React.Component {
         }
     };
 
+    onShowTagClick = (categoryId, e) => {
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+        Control.go(`/category/taglist/${categoryId}`);
+        console.log(categoryId);
+    }
+
     onClick = id => {
         Control.go('/category/detail/'+id);
     };
 
     render() {
         return <div>
-            <List renderHeader={() => '物品类目'} className="my-list">
+            <List renderHeader={() => '物品类目'} className="page-category-list">
                 {
                     this.props.category.categoryList.map((item, index) => {
                         return (
                             <Item arrow="horizontal" multipleLine
                                   key={index}
                                   onClick={this.onClick.bind(this, item.id)}
+                                  extra={<Button key={`button-category-${item.id}`} onClick={this.onShowTagClick.bind(this, item.id)} size="small" type="primary">查看标签</Button>}
                             >
                                 {item.name}
-                                <Brief>包含{item.count}件物品 </Brief>
+                                <Brief>包含{item.articleCount}件物品, {item.tagCount}个标签 </Brief>
                             </Item>
                         );
                     })

@@ -5,3 +5,8 @@
     fill: currentColor;
     overflow: hidden;
 }
+
+.page-category-list .am-list-extra  a{
+    padding: 5px 10px;
+    display: inline;
+}

@@ -78,14 +78,14 @@ Mock.mock('/get-category-list', {
 			{
 				'id|+1': 10,
 				'name|1': ['未分类', '上衣', '下衣', '鞋子', '饰品', '电子产品', '药品', '食物', '家纺'],
-				'count|1-200': 20,
+				'articleCount|1-200': 20,
 				'tagList|1-10': [
 					{
 						'id|+1': 500,
 						'name|1': [
 							'裤子', '饰品', '手镯', '鞋子', '帽子', '外套', '毛衣', '秋衣', '秋裤', '手表', '电脑', '手机', '感冒药', '药品'
 						],
-						'count|1-200': 1,
+						'articleCount|1-200': 1,
 					}
 				],
 			},
@@ -230,7 +230,7 @@ Mock.mock(RegExp('/get-furniture-list' + ".*"), "get", (options) => {
 });
 
 // 添加标签
-Mock.mock(RegExp('/category/create-tag' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/1category/create-tag' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params);
 	let result = {
@@ -383,7 +383,7 @@ Mock.mock(RegExp('/1home/get-room-list' + ".*"), "get", (options) => {
 });
 
 // 添加分类
-Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/1category/create-category' + ".*"), "post", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params, options);
 
@@ -393,7 +393,8 @@ Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
 		tagList.push({
 			id: Random.natural( 100, 9999 ),
 			categoryId,
-			count: 0,
+			articleCount: 0,
+			tagCount: Random.natural( 100, 9999 ),
 			name: params.tagList[i],
 		});
 	}
@@ -404,7 +405,7 @@ Mock.mock(RegExp('/category/create-category' + ".*"), "post", (options) => {
 			category: {
 				id: categoryId,
 				name: params.name,
-				count: 0,
+				articleCount: 0,
 				tagList,
 			},
 		},

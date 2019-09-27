@@ -29,11 +29,10 @@ const Category = (state = initState, action) => {
             let newTag = {
                 id: action.id,
                 name: action.tagName,
-                count: 0,
+                articleCount: 0,
             };
-            let categoryIndex = categoryList.findIndex((item) => (item.id === action.categoryId));
-            categoryList[categoryIndex].tagList.push(newTag);
-            console.log(categoryList);
+            let categoryIndex = categoryList.findIndex((item) => (parseInt(item.id) === parseInt(action.categoryId)));
+            categoryList[categoryIndex].tagList.unshift(newTag);
             return {
                 ...state,
                 categoryList: [...categoryList],

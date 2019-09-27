@@ -224,7 +224,7 @@ class Add extends React.Component {
             quantity: this.state.quantity,
             price: this.state.price,
             buyDate: this.state.buyDate,
-            category: this.state.category,
+            categoryId: this.state.category[0],
             color: this.state.colorValue,
             comment: this.state.comment,
             ownUser: this.state.ownUser,
@@ -340,7 +340,7 @@ class Add extends React.Component {
             { text: '取消' },
             { text: '添加', onPress: value => {
                     createTag(this.state.category[0], value).then(result => {
-                        let newTag = {label: result.data.tagName, value: result.data.id, count: 0};
+                        let newTag = {label: result.data.tagName, value: result.data.id, articleCount: 0};
                         this.setState({
                             tagPicker: {
                                 ...this.state.tagPicker,
@@ -426,7 +426,7 @@ class Add extends React.Component {
                             {this.props.common.userInfo.familyMember.map(user => {
                                 return <Tag key={user.id} onChange={(selected => {
                                     this.onChangeOwnUser(selected, user.id);
-                                })} selected={this.state.ownUser.includes(user.id)}>{user.username}</Tag>
+                                })} selected={this.state.ownUser.includes(parseInt(user.id))}>{user.nickname}</Tag>
                             })}
                         </List.Item.Brief>
                     </List.Item>
