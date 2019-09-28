@@ -1,7 +1,7 @@
 /**
  *
  * Created by PhpStorm.
- * Author: Xu shantong <shantongxu@qq.com>
+ * Author: Shantong Xu <shantongxu@qq.com>
  * Date: 2019/9/10
  * Time: 17:28
  */
@@ -24,7 +24,7 @@ Mock.setup({
 });
 
 // 获取用户信息
-Mock.mock('/get-user-info', {
+Mock.mock('/1user/get-user-info', {
 	code: 0,
 	message: 'ok',
 	data: {
@@ -70,7 +70,7 @@ Mock.mock('/get-user-info', {
 	},
 });
 
-Mock.mock('/get-category-list', {
+Mock.mock('/1category/get-category-list', {
 	code: 0,
 	message: 'ok',
 	data: {
@@ -247,7 +247,7 @@ Mock.mock(RegExp('/1category/create-tag' + ".*"), "post", (options) => {
 });
 
 // 添加物品
-Mock.mock(RegExp('/article/create-article' + ".*"), "post", (options) => {
+Mock.mock(RegExp('/1111article/create-article' + ".*"), "get", (options) => {
 	let params = getPostParams(options.body);
 	console.log(params);
 	let result = {

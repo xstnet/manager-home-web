@@ -19,8 +19,10 @@ import {
 } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { connect } from 'react-redux';
+import moment  from 'moment';
 import { handleAddTag } from '../../store/reducers/category/action';
 import {getCategoryList, createTag, createArticle, getRoomList} from '../../api/api';
+import ImageUtil from '../../utils/ImageUtil';
 import './Add.css';
 
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -32,14 +34,6 @@ if (isIPhone) {
         onTouchStart: e => e.preventDefault(),
     };
 }
-
-const imageData = [{
-    url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-    id: '2121',
-}, {
-    url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-    id: '2122',
-}];
 
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -54,9 +48,10 @@ class Add extends React.Component {
             roomId: [],
             buyDate: now,
             file: {
-                files: imageData,
+                files: [],
                 multiple: true,
             },
+            progressImage: [],
             tagPicker: {
                 visible: false,
                 data: [],
@@ -115,15 +110,43 @@ class Add extends React.Component {
         this.setState({ quantity });
     };
 
-    onChange = (files, type, index) => {
+    onImageFileChange = (files, type, index) => {
         console.log(files, type, index);
         this.setState({
             file: {
                 files,
                 multiple: this.state.file.multiple,
-            }
+            },
+            progressImage: [],
         });
+        console.log(this.state.file);
     };
+
+    handleCompressImage = (fileList) => {
+        console.log(fileList, 'fileList');
+        for (let i = 0; i < fileList.length; i++) {
+            ImageUtil.compressImage(fileList[i].file, fileList[i].url, i, (fileIndex, dataUrl, file) => {
+                console.log(fileIndex, 'fileIndex');
+                    let newFile = {};
+                    newFile.file = ImageUtil.dataURLtoFile(dataUrl, file.name);
+                    this.state.progressImage[fileIndex] = newFile;
+                    this.setState(
+                        {
+                            progressImage: [...this.state.progressImage],
+                        }, () => {
+                            if (this.state.progressImage.length === fileList.length) {
+                                if (!this.state.progressImage.includes(undefined)) {
+                                    Toast.hide();
+                                    this.onSubmit();
+                                }
+                            }
+                        }
+                    );
+                }
+            )
+        }
+        console.log(this.state.progressImage);
+    }
 
     onChangeColor = (color) => {
         this.setState({
@@ -201,18 +224,34 @@ class Add extends React.Component {
         this.setState({ownUser});
     };
 
+    genderImageFormData = () => {
+        let formData = new FormData();
+        console.log(this.state.progressImage);
+        for (let i = 0; i < this.state.progressImage.length; i++) {
+            let file = this.state.progressImage[i].file;
+            formData.append('imageFile[]', file);
+        }
+        return formData;
+    }
+
     onSubmit = (e) => {
-        e.preventDefault();
-        if (this.state.articleName.length <= 0) {
-            Toast.info('请填写物品名称!', 2);
-            return false;
-        }
-        if (this.state.category.length <= 0) {
-            Toast.info('请选择物品分类!', 2);
-            return false;
-        }
-        if (this.state.roomId.length === 0) {
-            Toast.info('请选择存放房间!', 2);
+        e && e.preventDefault();
+        // if (this.state.articleName.length <= 0) {
+        //     Toast.info('请填写物品名称!', 2);
+        //     return false;
+        // }
+        // if (this.state.category.length <= 0) {
+        //     Toast.info('请选择物品分类!', 2);
+        //     return false;
+        // }
+        // if (this.state.roomId.length === 0) {
+        //     Toast.info('请选择存放房间!', 2);
+        //     return false;
+        // }
+
+        if (this.state.file.files.length !== this.state.progressImage.length) {
+            Toast.loading('正在处理图片...', 0);
+            this.handleCompressImage(this.state.file.files);
             return false;
         }
 
@@ -223,24 +262,34 @@ class Add extends React.Component {
             tags: this.state.tagPicker.selectedData,
             quantity: this.state.quantity,
             price: this.state.price,
-            buyDate: this.state.buyDate,
+            buyDate: moment(this.state.buyDate).format("YYYY-MM-DD"),
             categoryId: this.state.category[0],
-            color: this.state.colorValue,
+            color: this.state.colorValue.length === 0 ? '' : this.state.colorValue[0],
             comment: this.state.comment,
             ownUser: this.state.ownUser,
         };
-
-        console.log(params);
+        console.log('articleParams', params);
+        let formData = this.genderImageFormData();
+        for (let field in params) {
+            formData.append(field, params[field]);
+        }
         this.setState({addButton: {
                 ...this.state.addButton,
                 disabled: true,
                 loading: true,
             }});
+
         // 添加物品
-        createArticle(params).then(result => {
+        createArticle(formData).then(result => {
             this.setState({addButton: {
                     ...this.state.addButton,
                     text: '继续添加',
+                    disabled: false,
+                    loading: false,
+                }});
+        }).catch(err => {
+            this.setState({addButton: {
+                    ...this.state.addButton,
                     disabled: false,
                     loading: false,
                 }});
@@ -358,7 +407,6 @@ class Add extends React.Component {
 
     render() {
         const { getFieldProps, getFieldDecorator } = this.props.form;
-        const { files } = this.state.file;
         let category = this.props.category.categoryList.map(item => {return {label:item.name,value:item.id}});
         let roomList = this.props.home.roomList.map(item => {return {label:item.name,value:item.id}});
         return (
@@ -483,10 +531,10 @@ class Add extends React.Component {
                 {/*图片*/}
                 <List renderHeader={() => '图片'}>
                     <ImagePicker
-                        files={files}
-                        onChange={this.onChange}
+                        files={this.state.file.files}
+                        onChange={this.onImageFileChange}
                         onImageClick={(index, fs) => console.log(index, fs)}
-                        selectable={files.length < 7}
+                        selectable={this.state.file.files.length < 10}
                         multiple={this.state.file.multiple}
                     />
                 </List>

@@ -1,7 +1,7 @@
 /**
  *
  * Created by PhpStorm.
- * Author: Xu shantong <shantongxu@qq.com>
+ * Author: Shantong Xu <shantongxu@qq.com>
  * Date: 2019/9/10
  * Time: 16:46
  */
@@ -46,7 +46,11 @@ axios.interceptors.response.use(function (config) {
 });
 
 class Http {
-	static get(url, params = {}) {
+	static get(url, params = {}, tips = {}) {
+		tips = {showMsg:true, loading: false, message: '加载中...', ...tips};
+		if (tips.loading) {
+			Toast.loading(tips.message, 0);
+		}
 		return new Promise((resolve, reject) => {
 			params.homeId = Cache.get('homeId');
 			axios.get(url, {
@@ -55,25 +59,35 @@ class Http {
 					Authorization: 'Bearer ' + Cache.getToken(),
 				}
 			}, ).then(res => {
+				if (res === undefined || res.data.code === undefined) {
+					throw new Error('系统错误');
+				}
 				if (res.data.code === config.CODE_NO_PERMISSION) {
 					Toast.info(res.data.message, 1.5);
 					return Promise.reject('No Permission');
 				} else if (res.data.code === config.CODE_NEED_LOGIN) {
-					// Cache.remove('token');
-					// Cache.remove('userInfo');
-					// Cache.set('isLogin', false);
+					Cache.remove('token');
+					Cache.set('isLogin', false);
 					Toast.info(res.data.message, 1.5);
+
 					Control.go('/login');
 					throw res.data.message;
 				}
 				resolve(res.data)
 			}).catch(err => {
+				if (tips.loading) {
+					Toast.hide();
+				}
+				if (err.message === 'Network Error') {
+					err.message = '网络错误!';
+				}
+				Toast.fail(err.message);
 				reject(err);
 			})
 		})
 	}
 
-	static post(url, params = {}, tips = {}) {
+	static handlePost(url, params = {}, tips = {}) {
 		tips = {showMsg:true, loading: true, message: '提交中...', ...tips};
 		if (tips.loading) {
 			Toast.loading(tips.message, 0);
@@ -81,20 +95,27 @@ class Http {
 		params.homeId = Cache.get('homeId');
 		console.log('post params', params);
 		return new Promise((resolve, reject) => {
-			axios.post(url, qs.stringify(params), {
-					headers: {
-						Authorization: 'Bearer ' + Cache.getToken(),
-					}
+			let headers = {
+				Authorization: 'Bearer ' + Cache.getToken(),
+			}
+			if (params.onUpload) {
+				headers['Content-Type'] = 'multipart/form-data';
+			}
+			axios.post(url, params, {
+					headers
 				}
 			).then(res => {
 				if (tips.loading) {
 					Toast.hide();
 				}
+				if (res === undefined || res.data.code === undefined) {
+					throw new Error('系统错误');
+				}
 				if (res.data.code === config.CODE_NEED_LOGIN) {
 					Cache.remove('token');
 					Cache.set('isLogin', false);
 					Toast.info(res.data.message, 1.5).then(Control.go('/login'));
-					throw res.data.message;
+					throw new Error(res.data.message);
 				}
 				switch (res.data.code) {
 					case config.CODE_SUCCESS:
@@ -109,11 +130,24 @@ class Http {
 			}).catch(err => {
 				if (tips.loading) {
 					Toast.hide();
-					Toast.info(err);
+					if (err.message === 'Network Error') {
+						err.message = '网络错误!';
+					}
+					Toast.fail(err.message);
 				}
 				reject(err);
 			})
 		})
+	}
+
+	static post(url, params = {}, tips = {}) {
+		params.homeId = Cache.get('homeId');
+		return this.handlePost(url, qs.stringify(params), tips);
+	}
+
+	static upload(url, formData = {}, tips = {}) {
+		formData.append('homeId', Cache.get('homeId'));
+		return this.handlePost(url, formData, tips);
 	}
 }
 

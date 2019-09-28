@@ -98,7 +98,7 @@ export function createTag(categoryId, tagName) {
 
 // 添加物品
 export function createArticle(params) {
-	return Http.post('/article/create-article', params);
+	return Http.upload('/article/create-article', params);
 }
 
 // 添加类目
