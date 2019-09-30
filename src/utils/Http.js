@@ -124,10 +124,11 @@ class Http {
 						}
 						break;
 					default:
-						return Promise.reject(res.data.message);
+						throw new Error(res.data.message);
 				}
 				resolve(res.data);
 			}).catch(err => {
+				console.log(err);
 				if (tips.loading) {
 					Toast.hide();
 					if (err.message === 'Network Error') {

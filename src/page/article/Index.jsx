@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { Link } from 'react-keeper'
 
 /* eslint no-dupe-keys: 0, no-mixed-operators: 0 */
-import { ListView, Button } from 'antd-mobile';
+import { ListView, Button, Drawer } from 'antd-mobile';
 import './Index.css';
 import {getArticleList} from "../../api/api";
 
@@ -62,6 +62,7 @@ class Index extends React.Component {
                 count: 0,
                 more: 0,
             },
+            searchSidebarOpen: false,
             dataSource: dataSource.cloneWithRows([]),
         };
     }
@@ -84,6 +85,15 @@ class Index extends React.Component {
             });
         });
 
+    }
+
+    onSidebarOpenChange = (...args) => {
+        console.log(args);
+        this.setState({ searchSidebarOpen: !this.state.searchSidebarOpen });
+    }
+
+    handleClickSelectButton = () => {
+        this.setState({ searchSidebarOpen: true });
     }
 
     // If you use redux, the data maybe at props, you need use `componentWillReceiveProps`
@@ -121,6 +131,12 @@ class Index extends React.Component {
         });
     };
 
+    renderSearchSideBar = () => {
+        return <div className="search-sidebar">
+222
+        </div>
+    }
+
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         return (
             <Link to={`/article/detail/${rowData.id}`}>
@@ -145,7 +161,7 @@ class Index extends React.Component {
         return <div style={{overflow: 'hidden'}}>
             <span>物品列表</span>
             <div style={{float: 'right'}}>
-                <Button size="small" type="primary">筛选</Button>
+                <Button size="small" onClick={this.handleClickSelectButton} type="primary">筛选</Button>
             </div>
         </div>
     };
@@ -160,37 +176,52 @@ class Index extends React.Component {
         );
 
         return (
-            <ListView
-                ref={el => this.lv = el}
-                initialListSize={10}
-                dataSource={this.state.dataSource}
-                renderHeader={this.renderHeader}
-                renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
-                    {this.state.loadMessage}
-                    {/*{this.state.isLoading ? '正在加载...' : '加载完成'}*/}
-                </div>)}
-                // 自定义 body 的包裹组件
-                renderBodyComponent={() => <MyBody />}
-                renderRow={this.renderRow}
-                /*
-                 * 如果提供了此属性，一个可渲染的组件会被渲染在每一行下面，除了小节标题的前面的最后一行。
-                 * 在其上方的小节ID和行ID，以及邻近的行是否被高亮会作为参数传递进来。
-                 */
-                renderSeparator={separator}
-                style={{
-                    height: this.state.height,
-                    overflow: 'auto',
-                }}
-                // 每次事件循环（每帧）渲染的行数
-                pageSize={10}
-                // onScroll={() => { console.log('scroll'); }}
-                // 当一个行接近屏幕范围多少像素之内的时候，就开始渲染这一行
-                scrollRenderAheadDistance={50}
-                // 调用下一页的方法
-                onEndReached={this.onEndReached}
-                // 调用下一页的临界值, 单位px
-                onEndReachedThreshold={10}
-            />
+            <div>
+                {/*侧边筛选*/}d
+                <Drawer
+                    className="my-drawer"
+                    position="right"
+                    style={{ minHeight: document.documentElement.clientHeight }}
+                    enableDragHandle
+                    contentStyle={{ color: '#A6A6A6', textAlign: 'center'}}
+                    sidebar={this.renderSearchSideBar()}
+                    open={this.state.searchSidebarOpen}
+                    onOpenChange={this.onSidebarOpenChange}
+                >
+                    <ListView
+                        ref={el => this.lv = el}
+                        initialListSize={10}
+                        dataSource={this.state.dataSource}
+                        renderHeader={this.renderHeader}
+                        renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
+                            {this.state.loadMessage}
+                            {/*{this.state.isLoading ? '正在加载...' : '加载完成'}*/}
+                        </div>)}
+                        // 自定义 body 的包裹组件
+                        renderBodyComponent={() => <MyBody />}
+                        renderRow={this.renderRow}
+                        /*
+                         * 如果提供了此属性，一个可渲染的组件会被渲染在每一行下面，除了小节标题的前面的最后一行。
+                         * 在其上方的小节ID和行ID，以及邻近的行是否被高亮会作为参数传递进来。
+                         */
+                        renderSeparator={separator}
+                        style={{
+                            height: this.state.height,
+                            overflow: 'auto',
+                        }}
+                        // 每次事件循环（每帧）渲染的行数
+                        pageSize={10}
+                        // onScroll={() => { console.log('scroll'); }}
+                        // 当一个行接近屏幕范围多少像素之内的时候，就开始渲染这一行
+                        scrollRenderAheadDistance={50}
+                        // 调用下一页的方法
+                        onEndReached={this.onEndReached}
+                        // 调用下一页的临界值, 单位px
+                        onEndReachedThreshold={10}
+                    />
+
+                </Drawer>
+            </div>
         );
     }
 }

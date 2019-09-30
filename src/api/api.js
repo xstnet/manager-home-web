@@ -75,13 +75,13 @@ export function getCategoryList() {
 
 // 获取物品详情
 export function getArticleDetail(id = 0) {
-	return Http.get('/get-article-detail', {id});
+	return Http.get('/article/get-article-detail', {id});
 }
 
 // 获取物品列表
 export const getArticleList = (id, page = 1) => {
 
-	return Http.get('/get-article-list', {id, page});
+	return Http.get('/article/get-article-list', {id, page});
 	// try {
 	// 	return Http.get('/get-article-list', {id, page});
 	// 	console.log(result);

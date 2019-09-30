@@ -29,7 +29,7 @@ class ImageUtil {
 				canvas.width = imgScale.width;
 				canvas.height = imgScale.height;
 				ctx.drawImage(image, 0, 0, imgScale.width, imgScale.height);
-				let dataUrl = canvas.toDataURL('image/jpeg'); // 图片base64
+				let dataUrl = canvas.toDataURL('image/jpeg', 1); // 图片base64
 				ctx.clearRect(0, 0, imgScale.width, imgScale.height); // 清除画布
 
 				callback(index, dataUrl, file); //dataURL:处理成功返回的图片base64
