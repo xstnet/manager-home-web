@@ -28,7 +28,7 @@ class Index extends React.Component {
         }
         login({username: this.state.username, password: this.state.password}).then(res => {
             console.log('登录返回结果', res);
-            if (res !== undefined) {
+            if (res !== undefined && res.code === 0) {
                 Control.go('/');
             }
         });

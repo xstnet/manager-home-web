@@ -13,11 +13,20 @@ import * as Actions from '../store/reducers/Actions';
 // 登录
 export const login = async (params) => {
 	try {
+		console.log(params, 'aaaa');
 		let result = await Http.post('/login', params, {message: '登录中。。。'});
-		Cache.set('token', result.data.token);
-		Cache.set('homeId', result.data.home_id);
-		Cache.set('isLogin', 1);
-		return result;
+		console.log(result, 444);
+		if (result && result.code === 0) {
+			Cache.set('token', result.data.token);
+			Cache.set('homeId', result.data.home_id);
+			Cache.set('isLogin', 1);
+			return result;
+		}
+		if (!result) {
+			throw '系统错误！';
+		}
+
+		throw result.message;
 	} catch (err) {
 		console.log(err);
 	}

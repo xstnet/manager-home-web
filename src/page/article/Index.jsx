@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { Link } from 'react-keeper'
 
 /* eslint no-dupe-keys: 0, no-mixed-operators: 0 */
-import { ListView, Button, Drawer } from 'antd-mobile';
+import { ListView, Button, Drawer, Toast } from 'antd-mobile';
 import './Index.css';
 import {getArticleList} from "../../api/api";
 
@@ -77,12 +77,19 @@ class Index extends React.Component {
 
         getArticleList(0).then(result => {
             console.log('result', result);
-            this.setState({
-                article: result.data,
-                dataSource: this.state.dataSource.cloneWithRows(result.data.list),
-                isLoading: false,
-                height: height,
-            });
+            if (result && result.code === 0) {
+                this.setState({
+                    article: result.data,
+                    dataSource: this.state.dataSource.cloneWithRows(result.data.list),
+                    isLoading: false,
+                    height: height,
+                });
+            } else {
+                this.setState({
+                    isLoading: false,
+                    loadMessage: '加载失败， 请重试',
+                });
+            }
         });
 
     }
@@ -133,7 +140,7 @@ class Index extends React.Component {
 
     renderSearchSideBar = () => {
         return <div className="search-sidebar">
-222
+            222
         </div>
     }
 
@@ -177,13 +184,12 @@ class Index extends React.Component {
 
         return (
             <div>
-                {/*侧边筛选*/}d
+                {/*侧边筛选*/}
                 <Drawer
                     className="my-drawer"
                     position="right"
                     style={{ minHeight: document.documentElement.clientHeight }}
                     enableDragHandle
-                    contentStyle={{ color: '#A6A6A6', textAlign: 'center'}}
                     sidebar={this.renderSearchSideBar()}
                     open={this.state.searchSidebarOpen}
                     onOpenChange={this.onSidebarOpenChange}

@@ -19,7 +19,8 @@ const config = {
 	CODE_NEED_LOGIN: 99, // 需要重新登录 code
 	CODE_NO_PERMISSION: 999, // 没有权限 code
 
-	BASE_URL: 'http://manager-home.com/', // 接口地址
+	BASE_URL: '/api/', // 接口地址
+	// BASE_URL: 'http://manager-home.com/', // 接口地址
 };
 
 export default config

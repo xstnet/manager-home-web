@@ -13,7 +13,7 @@ import { Control } from 'react-keeper';
 import config from '../config/config';
 import Cache from './Cache';
 
-import '../mock/mockdata';
+// import '../mock/mockdata';
 
 
 
@@ -23,7 +23,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.baseURL = config.BASE_URL;
 
-axios.defaults.timeout = 5;
+axios.defaults.timeout = 5000;
 
 // 拦截请求
 axios.interceptors.request.use(function (config) {
@@ -67,21 +67,31 @@ class Http {
 					return Promise.reject('No Permission');
 				} else if (res.data.code === config.CODE_NEED_LOGIN) {
 					Cache.remove('token');
-					Cache.set('isLogin', false);
+					Cache.set('isLogin', 0);
 					Toast.info(res.data.message, 1.5);
 
 					Control.go('/login');
-					throw res.data.message;
+					return Promise.reject(res.data.message);
+				} else if (res.data.code !== config.CODE_SUCCESS) {
+					// throw new Error(res.data.message);
+					return Promise.reject('获取数据失败');
 				}
 				resolve(res.data)
 			}).catch(err => {
+				let message;
+				if (typeof err === 'string') {
+					message = err;
+				} else {
+					message = err.message;
+				}
+				console.log('geterr', err);
 				if (tips.loading) {
 					Toast.hide();
 				}
-				if (err.message === 'Network Error') {
-					err.message = '网络错误!';
+				if (message === 'Network Error') {
+					message = '网络错误!';
 				}
-				Toast.fail(err.message);
+				Toast.fail(message);
 				reject(err);
 			})
 		})
@@ -92,15 +102,12 @@ class Http {
 		if (tips.loading) {
 			Toast.loading(tips.message, 0);
 		}
-		params.homeId = Cache.get('homeId');
 		console.log('post params', params);
 		return new Promise((resolve, reject) => {
 			let headers = {
 				Authorization: 'Bearer ' + Cache.getToken(),
 			}
-			if (params.onUpload) {
-				headers['Content-Type'] = 'multipart/form-data';
-			}
+
 			axios.post(url, params, {
 					headers
 				}
@@ -113,7 +120,7 @@ class Http {
 				}
 				if (res.data.code === config.CODE_NEED_LOGIN) {
 					Cache.remove('token');
-					Cache.set('isLogin', false);
+					Cache.set('isLogin', 0);
 					Toast.info(res.data.message, 1.5).then(Control.go('/login'));
 					throw new Error(res.data.message);
 				}
@@ -143,6 +150,7 @@ class Http {
 
 	static post(url, params = {}, tips = {}) {
 		params.homeId = Cache.get('homeId');
+		console.log(Cache.get('homeId'), '4444');
 		return this.handlePost(url, qs.stringify(params), tips);
 	}
 

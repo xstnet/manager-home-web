@@ -88,10 +88,13 @@ class Main extends React.Component {
         }
         Toast.loading('加载中...', 0);
         init().then(result => {
+            if (result) {
+                Toast.hide();
+                this.props.setUserInfo(result.userInfo);
+                this.props.setRoomList(result.roomList);
+            }
             console.log(111, result);
-            Toast.hide();
-            this.props.setUserInfo(result.userInfo);
-            this.props.setRoomList(result.roomList);
+
         });
         console.log('view userInfo', this.props.common.userInfo);
 
