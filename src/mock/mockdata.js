@@ -33,6 +33,7 @@ Mock.mock('/1user/get-user-info', {
 			username: '88888888',
 			nickname: '娜娜',
 			mobile: '13260718253',
+			homeName: '娜娜的小家',
 			homeList: [
 				{
 					id: 1,

@@ -29,7 +29,7 @@ class ImageUtil {
 				canvas.width = imgScale.width;
 				canvas.height = imgScale.height;
 				ctx.drawImage(image, 0, 0, imgScale.width, imgScale.height);
-				let dataUrl = canvas.toDataURL('image/jpeg', 1); // 图片base64
+				let dataUrl = canvas.toDataURL('image/jpeg', 0.9); // 图片base64
 				ctx.clearRect(0, 0, imgScale.width, imgScale.height); // 清除画布
 
 				callback(index, dataUrl, file); //dataURL:处理成功返回的图片base64
@@ -56,24 +56,23 @@ class ImageUtil {
          * width：宽度
          * height：高度
          * */
-		let maxWidth = 1000;
+		let maxSize = 1000;
 
 		let imgScale = {};
 		let w = 0;
 		let h = 0;
-		if (width <= maxWidth && height <= maxWidth) { // 如果图片宽高都小于限制的最大值,不用缩放
+		if (width <= maxSize && height <= maxSize) { // 如果图片宽高都小于限制的最大值,不用缩放
 			imgScale = {
 				width: width,
 				height: height
 			}
 		} else {
-			if (width >= height) { // 如果图片宽大于高
-				w = maxWidth;
-				h = Math.ceil(maxWidth * height / width);
-			} else {     // 如果图片高大于宽
-				h = maxWidth;
-				w = Math.ceil(maxWidth * width / height);
-			}
+
+			let currentMaxSize = Math.max(width, height);
+			let ratio = maxSize / currentMaxSize;
+
+			w = Math.ceil(width * ratio);
+			h = Math.ceil(height * ratio);
 			imgScale = {
 				width: w,
 				height: h

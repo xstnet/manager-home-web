@@ -65,7 +65,7 @@ class Index extends React.Component {
         let data = [...this.props.home.roomList];
         data.push(addData);
         return <div>
-            <p className="my-home-title">{this.props.common.userInfo.nickname}的小窝</p>
+            <p className="my-home-title">{this.props.common.userInfo.homeName}</p>
             <Grid data={data}
                   columnNum={3}
                   onClick={this.onClickRoom}

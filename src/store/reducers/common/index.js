@@ -27,6 +27,7 @@ const initState = {
         id: 0,
         mobile: '',
         username: '',
+        homeName: '',
         homeList: [],
         familyMember: [],
         colorList: [],

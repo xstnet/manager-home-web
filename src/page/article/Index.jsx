@@ -83,6 +83,7 @@ class Index extends React.Component {
                     dataSource: this.state.dataSource.cloneWithRows(result.data.list),
                     isLoading: false,
                     height: height,
+                    loadMessage: result.data.more === 1 ? this.state.loadMessage : '没有更多了',
                 });
             } else {
                 this.setState({
