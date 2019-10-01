@@ -23,7 +23,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.defaults.baseURL = config.BASE_URL;
 
-axios.defaults.timeout = 5000;
 
 // 拦截请求
 axios.interceptors.request.use(function (config) {
@@ -47,6 +46,7 @@ axios.interceptors.response.use(function (config) {
 
 class Http {
 	static get(url, params = {}, tips = {}) {
+		axios.defaults.timeout = 10000;
 		tips = {showMsg:true, loading: false, message: '加载中...', ...tips};
 		if (tips.loading) {
 			Toast.loading(tips.message, 0);
@@ -98,6 +98,7 @@ class Http {
 	}
 
 	static handlePost(url, params = {}, tips = {}) {
+		axios.defaults.timeout = 20000;
 		tips = {showMsg:true, loading: true, message: '提交中...', ...tips};
 		if (tips.loading) {
 			Toast.loading(tips.message, 0);

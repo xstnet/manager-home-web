@@ -19,6 +19,9 @@ class Index extends React.Component {
         this.props.listenNavBarMenuSelect(this.listonNavBarMenuSelect);
         this.props.setPageTitle("我的家");
         this.props.getRoomList(0);
+        if (this.props.common.userInfo.id === 0) {
+            this.props.initLayout();
+        }
     };
 
 	onClickRoom = (item, index) => {

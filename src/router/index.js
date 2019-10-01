@@ -51,6 +51,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         setMenuList: currentMenuList => dispatch(setMenuList(currentMenuList)),
         listenNavBarMenuSelect: callback => dispatch(listenNavBarMenuSelect(callback)),
         setTabBarIsShow: isShow => dispatch(setTabBarIsShow(isShow)),
+        initLayout: ownProps.initLayout,
     },
 });
 

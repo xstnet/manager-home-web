@@ -86,24 +86,9 @@ class Main extends React.Component {
             Control.go('/login');
             return;
         }
-        Toast.loading('加载中...', 0);
-        init().then(result => {
-            if (result) {
-                Toast.hide();
-                this.props.setUserInfo(result.userInfo);
-                this.props.setRoomList(result.roomList);
-            }
-            console.log(111, result);
-
-        });
-        console.log('view userInfo', this.props.common.userInfo);
-
-
-
-
-
         this.props.beforeNavBarMenuSelect(this.beforeNavBarMenuSelect);
 
+        this.initLayout();
         let currentPath = Control.path;
         console.log(currentPath);
         if (currentPath === '/') {
@@ -114,6 +99,18 @@ class Main extends React.Component {
             selectedTab: currentPath.split('/', 1)[0],
         })
     };
+
+    initLayout = () => {
+        Toast.loading('加载中...', 0);
+        init().then(result => {
+            if (result) {
+                Toast.hide();
+                this.props.setUserInfo(result.userInfo);
+                this.props.setRoomList(result.roomList);
+            }
+        });
+        console.log('view userInfo', this.props.common.userInfo);
+    }
 
     /**
      * 右上角菜单选择事件 before
@@ -198,7 +195,7 @@ class Main extends React.Component {
             </NavBar>
             {/*内容*/}
             <div className="page-main" style={{overflow: "hidden", paddingBottom: `${this.props.common.tabBarShow ? 50 : 0}px`}}>
-                <Routers/>
+                <Routers initLayout={this.initLayout}/>
             </div>
             {/*底部导航*/}
             <div style={{ position: 'fixed', height: '50px', width: '100%', bottom: 0 }}>
